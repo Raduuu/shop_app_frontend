@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Link, withRouter } from 'react-router-dom'
+import { Link, withRouter, Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -77,10 +77,10 @@ class Login extends React.Component {
         })
             .then(res => res.text())
             .then(res => {
-                debugger
                 this.setState({ apiResponse: res })
                 if (JSON.parse(this.state.apiResponse).token && this.props.type === 'login') {
-                    this.props.setIsLoggedIn()
+                    this.props.setIsLoggedIn(JSON.parse(this.state.apiResponse).token)
+                    this.props.setIsAdmin(JSON.parse(this.state.apiResponse).admin)
                     this.props.history.push('/')
                 }
             })
@@ -94,7 +94,13 @@ class Login extends React.Component {
         this.setState({ password: e.target.value })
     }
     render() {
-        return (
+        return this.state.isLoggedIn && this.props.type === 'login' ? (
+            <Redirect
+                to={{
+                    pathname: '/',
+                }}
+            />
+        ) : (
             <Wrapper>
                 <StyledTitle>{this.props.type === 'login' ? 'Sign in' : 'Register'}</StyledTitle>
                 <form noValidate>
