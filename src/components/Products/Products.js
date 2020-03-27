@@ -1,35 +1,50 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import CreateProduct from './CreateProduct'
 import ProductsList from './ProductsList'
 import Cookie from 'js-cookie'
 import axios from 'axios'
 
-const Products = () => {
-    const token = Cookie.get('token') ? Cookie.get('token') : null
-    const BearerToken = `Bearer ${token}`
-    const headers = {
-        'Content-Type': 'application/json',
-        Authorization: BearerToken,
+class Products extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            products: [],
+        }
     }
 
-    const [products, setProducts] = useState([])
+    componentDidMount() {
+        const token = Cookie.get('token') ? Cookie.get('token') : null
+        const BearerToken = `Bearer ${token}`
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: BearerToken,
+        }
 
-    useEffect(() => {
         axios({
-            url: 'http://localhost:9000/api/item/all',
+            url: 'http://localhost:9000/api/item/',
             method: 'GET',
             headers: headers,
         }).then(res => {
-            console.log('res', res)
-            setProducts(res)
+            this.setState({ products: res.data.data })
         })
-    })
-    return (
-        <>
-            <CreateProduct />
-            <ProductsList products={products} />
-        </>
-    )
+    }
+
+    updateProducts = (product, type = 'update') => {
+        if (type === 'update') {
+            this.setState({ products: [...this.state.products, product.data] })
+        } else if (type === 'delete') {
+            this.setState({ products: this.state.products.filter(item => item._id !== product.data._id) })
+        }
+    }
+
+    render() {
+        return (
+            <>
+                <CreateProduct updateProducts={this.updateProducts} />
+                <ProductsList products={this.state.products} updateProducts={this.updateProducts} />
+            </>
+        )
+    }
 }
 
 export default Products
