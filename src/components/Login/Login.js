@@ -77,10 +77,13 @@ class Login extends React.Component {
         })
             .then(res => res.text())
             .then(res => {
+                debugger
+                const apiResponse = JSON.parse(res)
                 this.setState({ apiResponse: res })
-                if (JSON.parse(this.state.apiResponse).token && this.props.type === 'login') {
-                    this.props.setIsLoggedIn(JSON.parse(this.state.apiResponse).token)
-                    this.props.setIsAdmin(JSON.parse(this.state.apiResponse).admin)
+                if (apiResponse.token && this.props.type === 'login') {
+                    this.props.setIsLoggedIn(apiResponse.token)
+                    this.props.setIsAdmin(apiResponse.admin)
+                    this.props.setUserEmail(apiResponse.email)
                     this.props.history.push('/')
                 }
             })

@@ -21,7 +21,7 @@ class Products extends React.Component {
         }
 
         axios({
-            url: 'http://localhost:9000/api/item/',
+            url: 'http://localhost:9000/api/product/',
             method: 'GET',
             headers: headers,
         }).then(res => {
@@ -30,8 +30,15 @@ class Products extends React.Component {
     }
 
     updateProducts = (product, type = 'update') => {
+        console.log('product', product.data)
+        console.log(this.state.products)
         if (type === 'update') {
-            this.setState({ products: [...this.state.products, product.data] })
+            this.setState(prevState => {
+                const products = [...prevState.products]
+                const index = products.findIndex(prod => prod.id === product.id)
+                products[index] = product.data
+                return { products }
+            })
         } else if (type === 'delete') {
             this.setState({ products: this.state.products.filter(item => item._id !== product.data._id) })
         }

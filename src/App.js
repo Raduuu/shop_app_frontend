@@ -12,6 +12,7 @@ class App extends React.Component {
         this.state = {
             isLoggedIn: false,
             isAdmin: false,
+            email: '',
         }
     }
 
@@ -22,15 +23,22 @@ class App extends React.Component {
         token && Cookie.set('token', token)
     }
 
-    setIsAdmin = () => {
+    setIsAdmin = isAdmin => {
         this.setState({
-            isAdmin: !this.state.isAdmin,
+            isAdmin: isAdmin,
+        })
+    }
+
+    setUserEmail = email => {
+        this.setState({
+            email: email,
         })
     }
 
     render() {
         return (
             <div className="App">
+                {this.state.isLoggedIn && <p>Welcome, {this.state.email}</p>}
                 <Router>
                     <Switch>
                         <Route path="/signup">
@@ -42,6 +50,7 @@ class App extends React.Component {
                                 isLoggedIn={this.state.isLoggedIn}
                                 setIsLoggedIn={this.setIsLoggedIn}
                                 setIsAdmin={this.setIsAdmin}
+                                setUserEmail={this.setUserEmail}
                             />
                         </Route>
                         <Route path="/products">

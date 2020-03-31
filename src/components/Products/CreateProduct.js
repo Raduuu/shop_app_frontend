@@ -3,7 +3,7 @@ import Cookie from 'js-cookie'
 import axios from 'axios'
 import styled from 'styled-components'
 
-const StyledForm = styled.form`
+export const StyledForm = styled.form`
     display: block;
     width: 400px;
     margin-top: 100px;
@@ -56,7 +56,7 @@ class CreateProduct extends React.Component {
             Authorization: `Bearer ${token}`,
         }
         axios({
-            url: 'http://localhost:9000/api/item',
+            url: 'http://localhost:9000/api/product',
             method: 'POST',
             headers: headers,
             data: JSON.stringify(body),
