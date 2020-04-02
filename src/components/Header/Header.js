@@ -11,14 +11,11 @@ const StyledList = styled.ul`
 `
 
 class Header extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-
     handleLogout = () => {
         this.props.setIsLoggedIn(undefined)
         this.props.history.push('/login')
         Cookie.remove('token')
+        Cookie.remove('email')
     }
 
     render() {
@@ -34,6 +31,7 @@ class Header extends React.Component {
                     <Link to="/password">Change password</Link>
                 </li>
                 <li>
+                    {/* eslint-disable-next-line */}
                     <a href="" onClick={this.handleLogout}>
                         Logout
                     </a>

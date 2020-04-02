@@ -4,6 +4,7 @@ import Login from './components/Login/Login'
 import MainView from './components/MainView/MainView'
 import Products from './components/Products/Products'
 import Header from './components/Header/Header'
+import ChangePassword from './components/ChangePassword/ChangePassword'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Cookie from 'js-cookie'
 
@@ -17,11 +18,12 @@ class App extends React.Component {
         }
     }
 
-    setIsLoggedIn = token => {
+    setIsLoggedIn = (token, email) => {
         this.setState({
             isLoggedIn: !!Cookie.get('token'),
         })
         token && Cookie.set('token', token)
+        email && Cookie.set('email', email)
     }
 
     setIsAdmin = isAdmin => {
@@ -38,11 +40,10 @@ class App extends React.Component {
 
     render() {
         const token = Cookie.get('token')
-        console.log(token)
-        console.log('this.state.isLoggedIn', this.state.isLoggedIn)
+        const email = Cookie.get('email')
         return (
             <div className="App">
-                {!!token && <p>Welcome, {this.state.email}</p>}
+                {!!token && <p>Welcome, {email}</p>}
                 <Router>
                     {!!token && <Header setIsLoggedIn={this.setIsLoggedIn}></Header>}
                     <Switch>
@@ -60,6 +61,9 @@ class App extends React.Component {
                         </Route>
                         <Route path="/products">
                             <Products isAdmin={this.state.isAdmin}></Products>
+                        </Route>
+                        <Route path="/password">
+                            <ChangePassword email={this.state.email}></ChangePassword>
                         </Route>
                         <Route path="/">
                             <MainView setIsLoggedIn={this.setIsLoggedIn} isAdmin={this.state.isAdmin} />

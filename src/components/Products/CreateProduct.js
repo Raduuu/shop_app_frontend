@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Cookie from 'js-cookie'
 import axios from 'axios'
 import styled from 'styled-components'
