@@ -18,7 +18,18 @@ const StyledIcon = styled.div`
     cursor: pointer;
 `
 
-const onEdit = ({ ev, product, name, description, quantity, setName, setDescription, setQuantity, updateProducts }) => {
+const onEdit = ({
+    ev,
+    product,
+    name,
+    description,
+    quantity,
+    setName,
+    setDescription,
+    setEdit,
+    setQuantity,
+    updateProducts,
+}) => {
     ev.preventDefault()
     const token = Cookie.get('token') ? Cookie.get('token') : null
     const BearerToken = `Bearer ${token}`
@@ -35,14 +46,12 @@ const onEdit = ({ ev, product, name, description, quantity, setName, setDescript
         quantity,
     }
 
-    console.log('body', body)
-
     axios.put(`http://localhost:9000/api/product/${product._id}`, body, { headers: headers }).then(res => {
         updateProducts(res.data, 'update')
         setName('')
         setDescription('')
         setQuantity('')
-        // setEdit(false)
+        setEdit(false)
     })
 }
 
@@ -66,7 +75,7 @@ const onDelete = (product, updateProducts) => {
     })
 }
 
-const Product = ({ product, updateProducts }) => {
+const Product = ({ product, updateProducts, isAdmin }) => {
     const [name, setName] = useState('')
     const [quantity, setQuantity] = useState(0)
     const [description, setDescription] = useState('')
@@ -76,14 +85,16 @@ const Product = ({ product, updateProducts }) => {
             <h2>{product.name}</h2>
             <p>{product.description}</p>
             <p>{product.quantity} in stock</p>
-            <IconsWrapper>
-                <StyledIcon onClick={() => setEdit(!edit)}>
-                    <FontAwesomeIcon icon={faEdit} color="#4c6ef5" />
-                </StyledIcon>
-                <StyledIcon onClick={() => onDelete(product, updateProducts)}>
-                    <FontAwesomeIcon icon={faTrash} color="#4c6ef5" />
-                </StyledIcon>
-            </IconsWrapper>
+            {isAdmin && (
+                <IconsWrapper>
+                    <StyledIcon onClick={() => setEdit(!edit)}>
+                        <FontAwesomeIcon icon={faEdit} color="#4c6ef5" />
+                    </StyledIcon>
+                    <StyledIcon onClick={() => onDelete(product, updateProducts)}>
+                        <FontAwesomeIcon icon={faTrash} color="#4c6ef5" />
+                    </StyledIcon>
+                </IconsWrapper>
+            )}
             {edit && (
                 <StyledForm noValidate>
                     <input
@@ -120,6 +131,7 @@ const Product = ({ product, updateProducts }) => {
                                 quantity,
                                 updateProducts,
                                 setName,
+                                setEdit,
                                 setQuantity,
                                 setDescription,
                             })

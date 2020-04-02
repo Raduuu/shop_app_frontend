@@ -30,8 +30,6 @@ class Products extends React.Component {
     }
 
     updateProducts = (product, type = 'update') => {
-        console.log('product', product.data)
-        console.log(this.state.products)
         if (type === 'update') {
             this.setState(prevState => {
                 const products = [...prevState.products]
@@ -47,8 +45,12 @@ class Products extends React.Component {
     render() {
         return (
             <>
-                <CreateProduct updateProducts={this.updateProducts} />
-                <ProductsList products={this.state.products} updateProducts={this.updateProducts} />
+                {this.props.isAdmin && <CreateProduct updateProducts={this.updateProducts} />}
+                <ProductsList
+                    products={this.state.products}
+                    updateProducts={this.updateProducts}
+                    isAdmin={this.props.isAdmin}
+                />
             </>
         )
     }
