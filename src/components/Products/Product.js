@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTrash, faCartPlus } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
 import axios from 'axios'
 import Cookie from 'js-cookie'
@@ -29,6 +29,7 @@ const onEdit = ({
     setEdit,
     setQuantity,
     updateProducts,
+    editProduct,
 }) => {
     ev.preventDefault()
     const token = Cookie.get('token') ? Cookie.get('token') : null
@@ -47,7 +48,7 @@ const onEdit = ({
     }
 
     axios.put(`http://localhost:9000/api/product/${product._id}`, body, { headers: headers }).then(res => {
-        updateProducts(res.data, 'update')
+        editProduct(res.data, 'update')
         setName('')
         setDescription('')
         setQuantity('')
@@ -75,11 +76,12 @@ const onDelete = (product, updateProducts) => {
     })
 }
 
-const Product = ({ product, updateProducts, isAdmin }) => {
+const Product = ({ product, updateProducts, editProduct, isAdmin }) => {
     const [name, setName] = useState('')
     const [quantity, setQuantity] = useState(0)
     const [description, setDescription] = useState('')
     const [edit, setEdit] = useState(false)
+    const iconColor = '#4c6ef5'
     return (
         <div>
             <h2>{product.name}</h2>
@@ -88,10 +90,13 @@ const Product = ({ product, updateProducts, isAdmin }) => {
             {isAdmin && (
                 <IconsWrapper>
                     <StyledIcon onClick={() => setEdit(!edit)}>
-                        <FontAwesomeIcon icon={faEdit} color="#4c6ef5" />
+                        <FontAwesomeIcon icon={faEdit} color={iconColor} />
                     </StyledIcon>
                     <StyledIcon onClick={() => onDelete(product, updateProducts)}>
-                        <FontAwesomeIcon icon={faTrash} color="#4c6ef5" />
+                        <FontAwesomeIcon icon={faTrash} color={iconColor} />
+                    </StyledIcon>
+                    <StyledIcon onClick={() => {}}>
+                        <FontAwesomeIcon icon={faCartPlus} color={iconColor} />
                     </StyledIcon>
                 </IconsWrapper>
             )}
@@ -129,7 +134,7 @@ const Product = ({ product, updateProducts, isAdmin }) => {
                                 name,
                                 description,
                                 quantity,
-                                updateProducts,
+                                editProduct,
                                 setName,
                                 setEdit,
                                 setQuantity,

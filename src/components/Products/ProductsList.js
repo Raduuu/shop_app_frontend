@@ -1,9 +1,15 @@
 import React from 'react'
 import Product from './Product'
 
-const ProductsList = ({ products, updateProducts, isAdmin }) => {
+const ProductsList = ({ products, updateProducts, editProduct, isAdmin }) => {
     return products.map(product => (
-        <Product updateProducts={updateProducts} key={product._id} product={product} isAdmin={isAdmin} />
+        <Product
+            updateProducts={updateProducts}
+            editProduct={editProduct}
+            key={product._id}
+            product={product}
+            isAdmin={isAdmin}
+        />
     ))
 }
 

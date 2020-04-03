@@ -29,28 +29,28 @@ class Products extends React.Component {
         })
     }
 
+    editProduct = product => {
+        this.setState(prevState => {
+            const products = [...prevState.products]
+            const index = products.findIndex(prod => prod.id === product.id)
+            products[index] = product.data
+            return { products }
+        })
+    }
     updateProducts = (product, type = 'update') => {
         if (type === 'update') {
-            this.setState(prevState => {
-                const products = [...prevState.products]
-                const index = products.findIndex(prod => prod.id === product.id)
-                products[index] = product.data
-                return { products }
-            })
+            this.setState({ products: [...this.state.products, product.data] })
         } else if (type === 'delete') {
             this.setState({ products: this.state.products.filter(item => item._id !== product.data._id) })
         }
     }
 
     render() {
+        const isAdmin = Cookie.get('isAdmin')
         return (
             <>
-                {this.props.isAdmin && <CreateProduct updateProducts={this.updateProducts} />}
-                <ProductsList
-                    products={this.state.products}
-                    updateProducts={this.updateProducts}
-                    isAdmin={this.props.isAdmin}
-                />
+                {isAdmin && <CreateProduct updateProducts={this.updateProducts} />}
+                <ProductsList products={this.state.products} editProduct={this.editProduct} isAdmin={isAdmin} />
             </>
         )
     }
