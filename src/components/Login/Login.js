@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, withRouter, Redirect } from 'react-router-dom'
 import styled from 'styled-components'
+import Cookie from 'js-cookie'
 
 const Wrapper = styled.div`
     width: 100%;
@@ -9,6 +10,7 @@ const Wrapper = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 `
 
 const StyledInput = styled.input`
@@ -85,7 +87,10 @@ class Login extends React.Component {
                 }
                 this.setState({ apiResponse: res })
                 if (apiResponse.token && this.props.type === 'login') {
-                    this.props.setIsLoggedIn(apiResponse.token, apiResponse.email)
+                    let token = apiResponse.token
+                    let email = apiResponse.email
+                    let isAdmin = apiResponse.admin
+                    this.props.setIsLoggedIn({ token, email, isAdmin })
                     this.props.setIsAdmin(apiResponse.admin)
                     this.props.setUserEmail(apiResponse.email)
                     this.props.history.push('/products')
@@ -103,39 +108,41 @@ class Login extends React.Component {
         this.setState({ password: e.target.value })
     }
     render() {
-        return this.state.isLoggedIn && this.props.type === 'login' ? (
-            <Redirect
-                to={{
-                    pathname: '/',
-                }}
-            />
-        ) : (
-            <Wrapper>
-                <StyledTitle>{this.props.type === 'login' ? 'Sign in' : 'Register'}</StyledTitle>
-                <form noValidate>
-                    {this.state.apiResponse && (
-                        <StyledError className="error">{JSON.parse(this.state.apiResponse).message}</StyledError>
-                    )}
-                    <StyledInput
-                        type="text"
-                        placeholder="Email"
-                        onChange={e => this.handleEmailChange(e)}
-                    ></StyledInput>
-                    <StyledInput
-                        type="password"
-                        placeholder="Password"
-                        onChange={e => this.handlePasswordChange(e)}
-                    ></StyledInput>
-                    {this.props.type !== 'login' ? (
-                        <StyledLink to="/login">Login</StyledLink>
-                    ) : (
-                        <StyledLink to="/signup">Register</StyledLink>
-                    )}
-                    <StyledButton type="submit" onClick={ev => this.onSubmit(ev)}>
-                        {this.props.type === 'login' ? 'Login' : 'Register'}
-                    </StyledButton>
-                </form>
-            </Wrapper>
+        let isLoggedIn = Cookie.get('token')
+        return (
+            !isLoggedIn && (
+                // <Redirect
+                //     to={{
+                //         pathname: '/',
+                //     }}
+                // />
+                <Wrapper>
+                    <StyledTitle>{this.props.type === 'login' ? 'Sign in' : 'Register'}</StyledTitle>
+                    <form noValidate>
+                        {this.state.apiResponse && (
+                            <StyledError className="error">{JSON.parse(this.state.apiResponse).message}</StyledError>
+                        )}
+                        <StyledInput
+                            type="text"
+                            placeholder="Email"
+                            onChange={e => this.handleEmailChange(e)}
+                        ></StyledInput>
+                        <StyledInput
+                            type="password"
+                            placeholder="Password"
+                            onChange={e => this.handlePasswordChange(e)}
+                        ></StyledInput>
+                        {this.props.type !== 'login' ? (
+                            <StyledLink to="/login">Login</StyledLink>
+                        ) : (
+                            <StyledLink to="/signup">Register</StyledLink>
+                        )}
+                        <StyledButton type="submit" onClick={ev => this.onSubmit(ev)}>
+                            {this.props.type === 'login' ? 'Login' : 'Register'}
+                        </StyledButton>
+                    </form>
+                </Wrapper>
+            )
         )
     }
 }

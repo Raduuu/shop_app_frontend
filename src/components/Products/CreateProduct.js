@@ -81,7 +81,7 @@ class CreateProduct extends React.Component {
                     value={this.state.name}
                 />
                 <input
-                    type="text"
+                    type="number"
                     name="quantity"
                     placeholder="Product quantity"
                     onChange={ev => this.setState({ quantity: ev.target.value })}
