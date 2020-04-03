@@ -1,7 +1,6 @@
 import React from 'react'
 import './App.css'
 import Login from './components/Login/Login'
-import MainView from './components/MainView/MainView'
 import Products from './components/Products/Products'
 import Header from './components/Header/Header'
 import ChangePassword from './components/ChangePassword/ChangePassword'
@@ -18,12 +17,13 @@ class App extends React.Component {
         }
     }
 
-    setIsLoggedIn = (token, email) => {
+    setIsLoggedIn = ({ token, email, isAdmin }) => {
         this.setState({
             isLoggedIn: !!Cookie.get('token'),
         })
         token && Cookie.set('token', token)
         email && Cookie.set('email', email)
+        isAdmin && Cookie.set('isAdmin', isAdmin)
     }
 
     setIsAdmin = isAdmin => {
@@ -53,7 +53,7 @@ class App extends React.Component {
                         <Route path="/login">
                             <Login
                                 type="login"
-                                isLoggedIn={this.state.isLoggedIn}
+                                isLoggedIn={!!token}
                                 setIsLoggedIn={this.setIsLoggedIn}
                                 setIsAdmin={this.setIsAdmin}
                                 setUserEmail={this.setUserEmail}
@@ -65,19 +65,21 @@ class App extends React.Component {
                         <Route path="/password">
                             <ChangePassword email={this.state.email}></ChangePassword>
                         </Route>
-                        <Route path="/">
-                            <MainView setIsLoggedIn={this.setIsLoggedIn} isAdmin={this.state.isAdmin} />
-                        </Route>
                         <Route
+                            path="/"
                             render={({ location }) => {
-                                return (
-                                    !this.state.isLoggedIn && (
-                                        <Redirect
-                                            to={{
-                                                pathname: '/login',
-                                            }}
-                                        />
-                                    )
+                                return !token ? (
+                                    <Redirect
+                                        to={{
+                                            pathname: '/login',
+                                        }}
+                                    />
+                                ) : (
+                                    <Redirect
+                                        to={{
+                                            pathname: '/products',
+                                        }}
+                                    />
                                 )
                             }}
                         />

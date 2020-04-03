@@ -12,10 +12,10 @@ const StyledList = styled.ul`
 
 class Header extends React.Component {
     handleLogout = () => {
-        this.props.setIsLoggedIn(undefined)
-        this.props.history.push('/login')
         Cookie.remove('token')
         Cookie.remove('email')
+        Cookie.remove('isAdmin')
+        this.props.history.push('/login')
     }
 
     render() {
