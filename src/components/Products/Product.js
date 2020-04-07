@@ -28,7 +28,6 @@ const onEdit = ({
     setDescription,
     setEdit,
     setQuantity,
-    updateProducts,
     editProduct,
 }) => {
     ev.preventDefault()
@@ -48,7 +47,7 @@ const onEdit = ({
     }
 
     axios.put(`http://localhost:9000/api/product/${product._id}`, body, { headers: headers }).then(res => {
-        editProduct(res.data, 'update')
+        editProduct(res.data)
         setName('')
         setDescription('')
         setQuantity('')
@@ -81,7 +80,7 @@ const Product = ({ product, updateProducts, editProduct, isAdmin }) => {
     const [quantity, setQuantity] = useState(0)
     const [description, setDescription] = useState('')
     const [edit, setEdit] = useState(false)
-    const iconColor = '#4c6ef5'
+    const iconColor = '#FF715B'
     return (
         <div>
             <h2>{product.name}</h2>
