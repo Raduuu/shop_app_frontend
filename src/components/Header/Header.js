@@ -15,6 +15,7 @@ class Header extends React.Component {
         Cookie.remove('token')
         Cookie.remove('email')
         Cookie.remove('isAdmin')
+        Cookie.remove('cart')
         this.props.history.push('/login')
     }
 

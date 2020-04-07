@@ -4,7 +4,7 @@ import User from './User'
 const UsersList = ({ users, updateUsers, editUser }) => {
     return (
         users &&
-        users.map(user => (
+        users.map((user) => (
             <User
                 email={user.email}
                 id={user._id}
