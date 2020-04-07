@@ -14,22 +14,6 @@ export const StyledForm = styled.form`
         width: 100%;
         margin-bottom: 15px;
     }
-    input,
-    textarea {
-        font-size: 16px;
-        line-height: 24px;
-        padding: 4px 8px;
-        border-radius: 4px;
-        border: 1px solid #b7aaaa;
-    }
-    button[type='submit'] {
-        width: auto;
-        padding: 4px 24px;
-        font-size: 16px;
-        line-height: 24px;
-        background-color: white;
-        -webkit-appearance: none;
-    }
 `
 
 class CreateProduct extends React.Component {
