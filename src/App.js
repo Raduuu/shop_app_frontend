@@ -4,6 +4,7 @@ import Login from './components/Login/Login'
 import Products from './components/Products/Products'
 import Header from './components/Header/Header'
 import ChangePassword from './components/ChangePassword/ChangePassword'
+import Users from './components/Users/Users'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Cookie from 'js-cookie'
 
@@ -65,6 +66,10 @@ class App extends React.Component {
                         <Route path="/password">
                             <ChangePassword email={this.state.email}></ChangePassword>
                         </Route>
+                        <Route path="/users">
+                            <Users></Users>
+                        </Route>
+                        <Route path="/cart">{/* <Cart></Cart> */}</Route>
                         <Route
                             path="/"
                             render={({ location }) => {
