@@ -19,16 +19,22 @@ class Header extends React.Component {
     }
 
     render() {
+        const isAdmin = Cookie.get('isAdmin')
         return (
             <StyledList>
                 <li>
                     <Link to="/products">Products</Link>
                 </li>
-                <li>
-                    <Link to="/users">Users</Link>
-                </li>
+                {isAdmin && (
+                    <li>
+                        <Link to="/users">Users</Link>
+                    </li>
+                )}
                 <li>
                     <Link to="/password">Change password</Link>
+                </li>
+                <li>
+                    <Link to="/cart">{`Cart(0)`}</Link>
                 </li>
                 <li>
                     {/* eslint-disable-next-line */}
