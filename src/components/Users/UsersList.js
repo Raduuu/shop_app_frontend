@@ -1,13 +1,20 @@
 import React from 'react'
+import User from './User'
 
-class UsersList extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
-    render() {
-        ;<></>
-    }
+const UsersList = ({ users, updateUsers, editUser }) => {
+    return (
+        users &&
+        users.map(user => (
+            <User
+                email={user.email}
+                id={user._id}
+                admin={user.admin}
+                key={user._id}
+                editUser={editUser}
+                updateUsers={updateUsers}
+            ></User>
+        ))
+    )
 }
 
 export default UsersList
