@@ -49,6 +49,7 @@ class CreateProduct extends React.Component {
             this.setState({
                 name: '',
                 quantity: '',
+                price: '',
                 description: '',
             })
         })
@@ -71,6 +72,13 @@ class CreateProduct extends React.Component {
                     onChange={ev => this.setState({ quantity: ev.target.value })}
                     value={this.state.quantity}
                 />
+                <input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    onChange={ev => this.setState({ price: ev.target.value })}
+                    value={this.state.price}
+                />
                 <textarea
                     name="description"
                     width="300"
@@ -81,7 +89,12 @@ class CreateProduct extends React.Component {
                 ></textarea>
                 <button
                     type="submit"
-                    disabled={this.state.name === '' || this.state.quantity === '' || this.state.description === ''}
+                    disabled={
+                        this.state.name === '' ||
+                        this.state.quantity === '' ||
+                        this.state.price === '' ||
+                        this.state.description === ''
+                    }
                     onClick={ev => this.handleSubmit(ev)}
                 >
                     Create
