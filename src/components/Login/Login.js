@@ -37,18 +37,16 @@ const StyledLink = styled(Link)`
 `
 
 const StyledButton = styled.button`
-    color: #fff;
     text-transform: uppercase;
-    text-decoration: none;
     background: #ed3330;
     padding: 20px;
     border-radius: 5px;
     display: inline-block;
-    border: none;
     transition: all 0.4s ease 0s;
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
+    color: #4c5454;
 `
 
 class Login extends React.Component {
@@ -117,7 +115,7 @@ class Login extends React.Component {
                 //     }}
                 // />
                 <Wrapper>
-                    <StyledTitle>{this.props.type === 'login' ? 'Sign in' : 'Register'}</StyledTitle>
+                    <StyledTitle>{this.props.type === 'login' ? 'Sign in' : 'Sign up'}</StyledTitle>
                     <form noValidate>
                         {this.state.apiResponse && (
                             <StyledError className="error">{JSON.parse(this.state.apiResponse).message}</StyledError>
@@ -133,12 +131,12 @@ class Login extends React.Component {
                             onChange={e => this.handlePasswordChange(e)}
                         ></StyledInput>
                         {this.props.type !== 'login' ? (
-                            <StyledLink to="/login">Login</StyledLink>
+                            <StyledLink to="/login">Sign in</StyledLink>
                         ) : (
-                            <StyledLink to="/signup">Register</StyledLink>
+                            <StyledLink to="/signup">Sign up</StyledLink>
                         )}
                         <StyledButton type="submit" onClick={ev => this.onSubmit(ev)}>
-                            {this.props.type === 'login' ? 'Login' : 'Register'}
+                            {this.props.type === 'login' ? 'Sign in' : 'Sign up'}
                         </StyledButton>
                     </form>
                 </Wrapper>
