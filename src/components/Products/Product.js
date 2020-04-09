@@ -6,6 +6,13 @@ import axios from 'axios'
 import Cookie from 'js-cookie'
 import { StyledForm } from './CreateProduct'
 
+const Wrapper = styled.div`
+    text-align: left;
+    margin: 0 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #dccece;
+`
+
 const IconsWrapper = styled.div`
     display: block;
     div {
@@ -16,6 +23,17 @@ const IconsWrapper = styled.div`
 
 const StyledIcon = styled.div`
     cursor: pointer;
+    display: inline-block;
+`
+
+const StyledButton = styled.button`
+    padding: initial 10px;
+    white-space: nowrap;
+    margin-top: 10px;
+    cursor: pointer;
+    span {
+        margin-right: 10px;
+    }
 `
 
 const onEdit = ({
@@ -81,24 +99,15 @@ const addToCart = (product) => {
     let cart = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')) : []
     let found = false
     for (let i = 0; i < cart.length; i++) {
-        debugger
-
         if (cart[i]._id === product._id) {
             cart[i].quantity++
             found = true
         }
     }
 
-    !found && cart.push({ _id: product._id, name: product.name, quantity: 1 })
+    !found && cart.push({ _id: product._id, name: product.name, price: product.price, quantity: 1 })
 
-    // let id = product._id
-
-    // if (!cart[id]) {
-    //     cart[id] = {}
-    // }
-    // cart[id].quantity = cart[id].quantity ? cart[id].quantity + 1 : 1
     Cookie.set('cart', cart)
-    console.log('cart', Cookie.get('cart'))
 }
 
 const Product = ({ product, updateProducts, editProduct, isAdmin }) => {
@@ -109,7 +118,7 @@ const Product = ({ product, updateProducts, editProduct, isAdmin }) => {
     const [edit, setEdit] = useState(false)
     const iconColor = '#FF715B'
     return (
-        <div>
+        <Wrapper>
             <h2>{product.name}</h2>
             <p>{product.description}</p>
             <p>Price: {product.price} coins</p>
@@ -125,10 +134,15 @@ const Product = ({ product, updateProducts, editProduct, isAdmin }) => {
                         </StyledIcon>
                     </div>
                 )}
-                <StyledIcon onClick={() => addToCart(product)}>
-                    <FontAwesomeIcon icon={faCartPlus} color={iconColor} />
-                </StyledIcon>
             </IconsWrapper>
+            <StyledButton onClick={() => addToCart(product)}>
+                <span>Add to cart</span>
+                <span>
+                    <StyledIcon>
+                        <FontAwesomeIcon icon={faCartPlus} color={iconColor} />
+                    </StyledIcon>
+                </span>
+            </StyledButton>
             {edit && (
                 <StyledForm noValidate>
                     <input
@@ -183,7 +197,7 @@ const Product = ({ product, updateProducts, editProduct, isAdmin }) => {
                     </button>
                 </StyledForm>
             )}
-        </div>
+        </Wrapper>
     )
 }
 
