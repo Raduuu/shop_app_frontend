@@ -13,30 +13,21 @@ class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoggedIn: !!Cookie.get('token'),
             isAdmin: false,
             email: '',
+            coins: 0,
         }
     }
 
-    setIsLoggedIn = ({ token, email, isAdmin }) => {
-        this.setState({
-            isLoggedIn: !!Cookie.get('token'),
-        })
+    setIsLoggedIn = ({ token, email, isAdmin, coins }) => {
         token && Cookie.set('token', token)
         email && Cookie.set('email', email)
-        isAdmin && Cookie.set('isAdmin', isAdmin)
-    }
-
-    setIsAdmin = (isAdmin) => {
+        isAdmin && Cookie.set('isAdmin', isAdmin) //used cookie to persist data on refresh
+        coins && Cookie.set('coins', coins)
         this.setState({
-            isAdmin: isAdmin,
-        })
-    }
-
-    setUserEmail = (email) => {
-        this.setState({
-            email: email,
+            coins,
+            email,
+            isAdmin,
         })
     }
 
@@ -45,7 +36,11 @@ class App extends React.Component {
         const email = Cookie.get('email')
         return (
             <div className="App">
-                {!!token && <p>Welcome, {email}</p>}
+                {!!token && (
+                    <p>
+                        Welcome, {email} - Coins: {Cookie.get('coins')}{' '}
+                    </p>
+                )}
                 <Router>
                     {!!token && <Header setIsLoggedIn={this.setIsLoggedIn}></Header>}
                     <Switch>
@@ -53,13 +48,7 @@ class App extends React.Component {
                             <Login type="signup" />
                         </Route>
                         <Route path="/login">
-                            <Login
-                                type="login"
-                                isLoggedIn={!!token}
-                                setIsLoggedIn={this.setIsLoggedIn}
-                                setIsAdmin={this.setIsAdmin}
-                                setUserEmail={this.setUserEmail}
-                            />
+                            <Login type="login" isLoggedIn={!!token} setIsLoggedIn={this.setIsLoggedIn} />
                         </Route>
                         <Route path="/products">
                             <Products isAdmin={this.state.isAdmin}></Products>
