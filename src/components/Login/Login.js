@@ -39,14 +39,15 @@ const StyledLink = styled(Link)`
 const StyledButton = styled.button`
     text-transform: uppercase;
     background: #ed3330;
-    padding: 20px;
+    padding: 8px 20px;
     border-radius: 5px;
     display: inline-block;
     transition: all 0.4s ease 0s;
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
-    color: #4c5454;
+    color: #ffffff;
+    border: none;
 `
 
 class Login extends React.Component {
@@ -58,7 +59,7 @@ class Login extends React.Component {
         }
     }
 
-    onSubmit = ev => {
+    onSubmit = (ev) => {
         ev.preventDefault()
         const email = this.state.email
         const password = this.state.password
@@ -75,8 +76,8 @@ class Login extends React.Component {
             headers,
             body: JSON.stringify(body),
         })
-            .then(res => res.text())
-            .then(res => {
+            .then((res) => res.text())
+            .then((res) => {
                 let apiResponse
                 if (this.props.type === 'signup') {
                     apiResponse = JSON.parse(res)
@@ -85,35 +86,26 @@ class Login extends React.Component {
                 }
                 this.setState({ apiResponse: res })
                 if (apiResponse.token && this.props.type === 'login') {
-                    let token = apiResponse.token
-                    let email = apiResponse.email
-                    let isAdmin = apiResponse.admin
-                    this.props.setIsLoggedIn({ token, email, isAdmin })
-                    this.props.setIsAdmin(apiResponse.admin)
-                    this.props.setUserEmail(apiResponse.email)
+                    let { token, email, admin, coins } = apiResponse
+                    this.props.setIsLoggedIn({ token, email, isAdmin: admin, coins })
                     this.props.history.push('/products')
-                } else if (!apiResponse.token && this.props.type === 'signup') {
+                } else if (this.props.type === 'signup') {
                     this.props.history.push('/login')
                 }
             })
     }
 
-    handleEmailChange = e => {
+    handleEmailChange = (e) => {
         this.setState({ email: e.target.value })
     }
 
-    handlePasswordChange = e => {
+    handlePasswordChange = (e) => {
         this.setState({ password: e.target.value })
     }
     render() {
         let isLoggedIn = Cookie.get('token')
         return (
             !isLoggedIn && (
-                // <Redirect
-                //     to={{
-                //         pathname: '/',
-                //     }}
-                // />
                 <Wrapper>
                     <StyledTitle>{this.props.type === 'login' ? 'Sign in' : 'Sign up'}</StyledTitle>
                     <form noValidate>
@@ -123,19 +115,19 @@ class Login extends React.Component {
                         <StyledInput
                             type="text"
                             placeholder="Email"
-                            onChange={e => this.handleEmailChange(e)}
+                            onChange={(e) => this.handleEmailChange(e)}
                         ></StyledInput>
                         <StyledInput
                             type="password"
                             placeholder="Password"
-                            onChange={e => this.handlePasswordChange(e)}
+                            onChange={(e) => this.handlePasswordChange(e)}
                         ></StyledInput>
                         {this.props.type !== 'login' ? (
                             <StyledLink to="/login">Sign in</StyledLink>
                         ) : (
                             <StyledLink to="/signup">Sign up</StyledLink>
                         )}
-                        <StyledButton type="submit" onClick={ev => this.onSubmit(ev)}>
+                        <StyledButton type="submit" onClick={(ev) => this.onSubmit(ev)}>
                             {this.props.type === 'login' ? 'Sign in' : 'Sign up'}
                         </StyledButton>
                     </form>
