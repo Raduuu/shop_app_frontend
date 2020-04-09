@@ -13,6 +13,7 @@ export const StyledForm = styled.form`
         display: block;
         width: 100%;
         margin-bottom: 15px;
+        box-sizing: border-box;
     }
 `
 
@@ -26,7 +27,7 @@ class CreateProduct extends React.Component {
         }
     }
 
-    handleSubmit = ev => {
+    handleSubmit = (ev) => {
         const { updateProducts } = this.props
         ev.preventDefault()
         const token = Cookie.get('token') ? Cookie.get('token') : null
@@ -44,7 +45,7 @@ class CreateProduct extends React.Component {
             method: 'POST',
             headers: headers,
             data: JSON.stringify(body),
-        }).then(res => {
+        }).then((res) => {
             updateProducts(res.data)
             this.setState({
                 name: '',
@@ -62,28 +63,28 @@ class CreateProduct extends React.Component {
                     type="text"
                     name="name"
                     placeholder="Product name"
-                    onChange={ev => this.setState({ name: ev.target.value })}
+                    onChange={(ev) => this.setState({ name: ev.target.value })}
                     value={this.state.name}
                 />
                 <input
                     type="number"
                     name="quantity"
                     placeholder="Product quantity"
-                    onChange={ev => this.setState({ quantity: ev.target.value })}
+                    onChange={(ev) => this.setState({ quantity: ev.target.value })}
                     value={this.state.quantity}
                 />
                 <input
                     type="number"
                     name="price"
                     placeholder="Price"
-                    onChange={ev => this.setState({ price: ev.target.value })}
+                    onChange={(ev) => this.setState({ price: ev.target.value })}
                     value={this.state.price}
                 />
                 <textarea
                     name="description"
                     width="300"
                     height="100"
-                    onChange={ev => this.setState({ description: ev.target.value })}
+                    onChange={(ev) => this.setState({ description: ev.target.value })}
                     placeholder="Product description"
                     value={this.state.description}
                 ></textarea>
@@ -95,7 +96,7 @@ class CreateProduct extends React.Component {
                         this.state.price === '' ||
                         this.state.description === ''
                     }
-                    onClick={ev => this.handleSubmit(ev)}
+                    onClick={(ev) => this.handleSubmit(ev)}
                 >
                     Create
                 </button>

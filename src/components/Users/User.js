@@ -21,6 +21,7 @@ const StyledForm = styled.div`
         display: block;
         text-align: left;
         margin-bottom: 10px;
+        box-sizing: border-box;
     }
 `
 
@@ -42,7 +43,7 @@ const onEdit = ({ ev, id, newEmail, isAdmin, setNewEmail, setIsAdmin, setEdit, e
         admin: isAdmin,
     }
 
-    axios.put(`http://localhost:9000/api/user/${id}`, body, { headers: headers }).then(res => {
+    axios.put(`http://localhost:9000/api/user/${id}`, body, { headers: headers }).then((res) => {
         editUser(res.data)
         // updateUsers(res.data, 'update')
         setNewEmail('')
@@ -63,7 +64,7 @@ const onDelete = (id, updateUsers) => {
         url: `http://localhost:9000/api/user/${id}`,
         method: 'DELETE',
         headers: headers,
-    }).then(res => {
+    }).then((res) => {
         updateUsers(res.data, 'delete')
     })
 }
@@ -93,7 +94,7 @@ const User = ({ email, id, admin, updateUsers, editUser }) => {
                         type="email"
                         name="email"
                         placeholder="New email"
-                        onChange={ev => setNewEmail(ev.target.value)}
+                        onChange={(ev) => setNewEmail(ev.target.value)}
                         value={newEmail}
                     />
                     <div>
@@ -103,14 +104,14 @@ const User = ({ email, id, admin, updateUsers, editUser }) => {
                             name={`isAdmin-${id}`}
                             value={isAdmin}
                             checked={isAdmin}
-                            onChange={ev => setIsAdmin(ev.target.checked)}
+                            onChange={(ev) => setIsAdmin(ev.target.checked)}
                         />
                         <label htmlFor={`isAdmin-${id}`}> is admin</label>
                     </div>
                     <button
                         type="submit"
                         disabled={newEmail === ''}
-                        onClick={ev =>
+                        onClick={(ev) =>
                             onEdit({
                                 ev,
                                 id,

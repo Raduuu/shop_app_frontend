@@ -48,7 +48,7 @@ textarea {
     border-radius: 4px;
     border: 1px solid #b7aaaa;
 }
-button[type='submit'] {
+button {
     width: auto;
     padding: 4px 24px;
     font-size: 16px;

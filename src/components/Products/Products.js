@@ -3,6 +3,11 @@ import CreateProduct from './CreateProduct'
 import ProductsList from './ProductsList'
 import Cookie from 'js-cookie'
 import axios from 'axios'
+import styled from 'styled-components'
+
+const StyledList = styled(ProductsList)`
+    margin-bottom: 60px;
+`
 
 class Products extends React.Component {
     constructor(props) {
@@ -24,15 +29,15 @@ class Products extends React.Component {
             url: 'http://localhost:9000/api/product/',
             method: 'GET',
             headers: headers,
-        }).then(res => {
+        }).then((res) => {
             this.setState({ products: res.data.data })
         })
     }
 
-    editProduct = product => {
-        this.setState(prevState => {
+    editProduct = (product) => {
+        this.setState((prevState) => {
             const products = [...prevState.products]
-            const index = products.findIndex(prod => prod.id === product.id)
+            const index = products.findIndex((prod) => prod.id === product.id)
             products[index] = product.data
             return { products }
         })
@@ -41,7 +46,7 @@ class Products extends React.Component {
         if (type === 'update') {
             this.setState({ products: [...this.state.products, product.data] })
         } else if (type === 'delete') {
-            this.setState({ products: this.state.products.filter(item => item._id !== product.data._id) })
+            this.setState({ products: this.state.products.filter((item) => item._id !== product.data._id) })
         }
     }
 
@@ -50,7 +55,7 @@ class Products extends React.Component {
         return (
             <>
                 {isAdmin && <CreateProduct updateProducts={this.updateProducts} />}
-                <ProductsList products={this.state.products} editProduct={this.editProduct} isAdmin={isAdmin} />
+                <StyledList products={this.state.products} editProduct={this.editProduct} isAdmin={isAdmin} />
             </>
         )
     }
