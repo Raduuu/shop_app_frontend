@@ -113,7 +113,7 @@ class Login extends React.Component {
                             <StyledError className="error">{JSON.parse(this.state.apiResponse).message}</StyledError>
                         )}
                         <StyledInput
-                            type="text"
+                            type="email"
                             placeholder="Email"
                             onChange={(e) => this.handleEmailChange(e)}
                         ></StyledInput>
