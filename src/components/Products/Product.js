@@ -127,6 +127,7 @@ const Product = ({ product, updateProducts, editProduct, isAdmin, setCartProduct
             <p>{product.description}</p>
             <p>Price: {product.price} coins</p>
             <p>{product.quantity} in stock</p>
+            <p>Category: {product.category}</p>
             <IconsWrapper>
                 {isAdmin && (
                     <div>

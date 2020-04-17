@@ -81,6 +81,7 @@ class Products extends React.Component {
                 <StyledList
                     products={this.state.products}
                     editProduct={this.editProduct}
+                    updateProducts={this.updateProducts}
                     isAdmin={isAdmin}
                     setCartProducts={this.props.setCartProducts}
                 />
