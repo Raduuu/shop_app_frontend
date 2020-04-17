@@ -9,6 +9,7 @@ class PasswordPage extends React.Component {
         this.state = {
             oldpassword: '',
             newpassword: '',
+            newpassword2: '',
         }
     }
 
@@ -21,20 +22,24 @@ class PasswordPage extends React.Component {
             Authorization: BearerToken,
         }
 
-        const body = {
-            email: Cookie.get('email'),
-            oldpassword: this.state.oldpassword,
-            newpassword: this.state.newpassword,
+        if (this.state.newpassword !== this.state.newpassword2) {
+            this.setState({ error: "Passwords don't match" })
+        } else {
+            const body = {
+                email: Cookie.get('email'),
+                oldpassword: this.state.oldpassword,
+                newpassword: this.state.newpassword,
+            }
+            axios
+                .post('http://localhost:9000/api/changepassword', body, { headers: headers })
+                .then((res) => {
+                    this.setState({ success: res.data.message })
+                })
+                .catch((err) => {
+                    this.setState({ success: undefined, error: 'an error has occured' })
+                    console.error(err)
+                })
         }
-        axios
-            .post('http://localhost:9000/api/changepassword', body, { headers: headers })
-            .then((res) => {
-                this.setState({ success: res.data.message })
-            })
-            .catch((err) => {
-                this.setState({ success: undefined, error: 'an error has occured' })
-                console.error(err)
-            })
     }
 
     render() {
@@ -47,11 +52,12 @@ class PasswordPage extends React.Component {
                     placeholder="Old Password"
                     onChange={(ev) => this.setState({ oldpassword: ev.target.value })}
                 />
+                <input name="newpassword" type="password" placeholder="New Password" />
                 <input
-                    name="newpassword"
+                    name="newpassword2"
                     type="password"
-                    placeholder="New Password"
-                    onChange={(ev) => this.setState({ newpassword: ev.target.value })}
+                    placeholder="Again your new password"
+                    onChange={(ev) => this.setState({ newpassword2: ev.target.value })}
                 />
                 <button type="submit" onClick={(ev) => this.handleSubmit(ev)}>
                     Submit
