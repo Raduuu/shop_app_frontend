@@ -14,7 +14,7 @@ const Pagination = ({ numberOfProducts, onChangePage }) => {
     }
     return (
         <Wrapper>
-            <h4>{`page ${pageNumber} of ${numberOfPages}`}</h4>
+            {numberOfPages > 0 && <h4>{`page ${pageNumber} of ${numberOfPages}`}</h4>}
             {arrOfPages.map((page) => (
                 <>
                     <a
