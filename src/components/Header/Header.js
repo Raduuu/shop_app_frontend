@@ -22,6 +22,7 @@ class Header extends React.Component {
 
     render() {
         const isAdmin = Cookie.get('isAdmin')
+        const { cartProducts } = this.props
         return (
             <StyledList>
                 <li>
@@ -36,7 +37,7 @@ class Header extends React.Component {
                     <Link to="/password">Change password</Link>
                 </li>
                 <li>
-                    <Link to="/cart">{`Cart(0)`}</Link>
+                    <Link to="/cart">{`Cart(${cartProducts})`}</Link>
                 </li>
                 <li>
                     {/* eslint-disable-next-line */}

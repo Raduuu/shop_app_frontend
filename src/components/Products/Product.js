@@ -95,22 +95,26 @@ const onDelete = (product, updateProducts) => {
     })
 }
 
-const addToCart = (product) => {
+const addToCart = (product, updateProducts) => {
     let cart = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')) : []
     let found = false
+    let total = 1
     for (let i = 0; i < cart.length; i++) {
+        total = total + cart[i].quantity
         if (cart[i]._id === product._id) {
             cart[i].quantity++
             found = true
         }
     }
 
+    updateProducts(total)
+
     !found && cart.push({ _id: product._id, name: product.name, price: product.price, quantity: 1 })
 
     Cookie.set('cart', cart)
 }
 
-const Product = ({ product, updateProducts, editProduct, isAdmin }) => {
+const Product = ({ product, updateProducts, editProduct, isAdmin, setCartProducts }) => {
     const [name, setName] = useState('')
     const [quantity, setQuantity] = useState(0)
     const [price, setPrice] = useState(0)
@@ -135,7 +139,7 @@ const Product = ({ product, updateProducts, editProduct, isAdmin }) => {
                     </div>
                 )}
             </IconsWrapper>
-            <StyledButton onClick={() => addToCart(product)}>
+            <StyledButton onClick={() => addToCart(product, setCartProducts)}>
                 <span>Add to cart</span>
                 <span>
                     <StyledIcon>

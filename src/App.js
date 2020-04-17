@@ -16,6 +16,18 @@ class App extends React.Component {
             isAdmin: false,
             email: '',
             coins: 0,
+            cartProducts: 0,
+        }
+    }
+
+    componentDidMount = () => {
+        const cart = JSON.parse(Cookie.get('cart')) || undefined
+        let total = 0
+        if (cart) {
+            for (let i = 0; i < cart.length; i++) {
+                total = total + cart[i].quantity
+            }
+            this.setState({ cartProducts: total })
         }
     }
 
@@ -31,6 +43,10 @@ class App extends React.Component {
         })
     }
 
+    setCartProducts = (cartNumber) => {
+        this.setState({ cartProducts: cartNumber })
+    }
+
     render() {
         const token = Cookie.get('token')
         const email = Cookie.get('email')
@@ -42,7 +58,9 @@ class App extends React.Component {
                     </p>
                 )}
                 <Router>
-                    {!!token && <Header setIsLoggedIn={this.setIsLoggedIn}></Header>}
+                    {!!token && (
+                        <Header setIsLoggedIn={this.setIsLoggedIn} cartProducts={this.state.cartProducts}></Header>
+                    )}
                     <Switch>
                         <Route path="/signup">
                             <Login type="signup" />
@@ -51,7 +69,7 @@ class App extends React.Component {
                             <Login type="login" isLoggedIn={!!token} setIsLoggedIn={this.setIsLoggedIn} />
                         </Route>
                         <Route path="/products">
-                            <Products isAdmin={this.state.isAdmin}></Products>
+                            <Products isAdmin={this.state.isAdmin} setCartProducts={this.setCartProducts}></Products>
                         </Route>
                         <Route path="/password">
                             <ChangePassword email={this.state.email}></ChangePassword>
@@ -60,7 +78,7 @@ class App extends React.Component {
                             <Users></Users>
                         </Route>
                         <Route path="/cart">
-                            <Cart></Cart>
+                            <Cart setCartProducts={this.setCartProducts}></Cart>
                         </Route>
                         <Route
                             path="/"

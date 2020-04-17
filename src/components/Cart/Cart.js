@@ -79,8 +79,15 @@ class Cart extends React.Component {
 
     removeCartProduct = (id) => {
         let cart = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')) : []
+        const { setCartProducts } = this.props
+        let total = 0
         const newCart = cart.filter((elem) => elem._id !== id)
         this.setState({ cartProds: newCart })
+        for (let i = 0; i < newCart.length; i++) {
+            total = total + newCart[i].quantity
+        }
+        setCartProducts(total)
+        this.setState({ cartProducts: total })
         Cookie.set('cart', newCart)
     }
 

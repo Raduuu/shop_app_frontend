@@ -78,7 +78,12 @@ class Products extends React.Component {
         return (
             <>
                 {isAdmin && <CreateProduct updateProducts={this.updateProducts} />}
-                <StyledList products={this.state.products} editProduct={this.editProduct} isAdmin={isAdmin} />
+                <StyledList
+                    products={this.state.products}
+                    editProduct={this.editProduct}
+                    isAdmin={isAdmin}
+                    setCartProducts={this.props.setCartProducts}
+                />
                 <StyledPagination numberOfProducts={this.state.count} onChangePage={this.onChangePage} />
             </>
         )

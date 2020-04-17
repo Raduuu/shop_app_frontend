@@ -1,7 +1,7 @@
 import React from 'react'
 import Product from './Product'
 
-const ProductsList = ({ products, updateProducts, editProduct, isAdmin }) => {
+const ProductsList = ({ products, updateProducts, editProduct, isAdmin, setCartProducts }) => {
     return products.map((product) => (
         <Product
             updateProducts={updateProducts}
@@ -9,6 +9,7 @@ const ProductsList = ({ products, updateProducts, editProduct, isAdmin }) => {
             key={product._id}
             product={product}
             isAdmin={isAdmin}
+            setCartProducts={setCartProducts}
         />
     ))
 }
