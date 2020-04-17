@@ -71,28 +71,34 @@ class Login extends React.Component {
             'Content-Type': 'application/json',
         }
         const { type } = this.props
-        fetch(`http://localhost:9000/${type === 'login' ? 'signin' : 'signup'}`, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(body),
-        })
-            .then((res) => res.text())
-            .then((res) => {
-                let apiResponse
-                if (this.props.type === 'signup') {
-                    apiResponse = JSON.parse(res)
-                } else {
-                    apiResponse = res !== '' && res !== undefined && JSON.parse(res)
-                }
-                this.setState({ apiResponse: res })
-                if (apiResponse.token && this.props.type === 'login') {
-                    let { token, email, admin, coins } = apiResponse
-                    this.props.setIsLoggedIn({ token, email, isAdmin: admin, coins })
-                    this.props.history.push('/products')
-                } else if (this.props.type === 'signup') {
-                    this.props.history.push('/login')
-                }
+
+        if (email !== this.state.email2) {
+            this.setState({ emailError: "Emails don't match" })
+        } else {
+            this.setState({ emailError: undefined })
+            fetch(`http://localhost:9000/${type === 'login' ? 'signin' : 'signup'}`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(body),
             })
+                .then((res) => res.text())
+                .then((res) => {
+                    let apiResponse
+                    if (this.props.type === 'signup') {
+                        apiResponse = JSON.parse(res)
+                    } else {
+                        apiResponse = res !== '' && res !== undefined && JSON.parse(res)
+                    }
+                    this.setState({ apiResponse: res })
+                    if (apiResponse.token && this.props.type === 'login') {
+                        let { token, email, admin, coins } = apiResponse
+                        this.props.setIsLoggedIn({ token, email, isAdmin: admin, coins })
+                        this.props.history.push('/products')
+                    } else if (this.props.type === 'signup') {
+                        this.props.history.push('/login')
+                    }
+                })
+        }
     }
 
     handleEmailChange = (e) => {
@@ -112,11 +118,22 @@ class Login extends React.Component {
                         {this.state.apiResponse && (
                             <StyledError className="error">{JSON.parse(this.state.apiResponse).message}</StyledError>
                         )}
+                        {this.state.emailError && <StyledError>{this.state.emailError}</StyledError>}
                         <StyledInput
                             type="email"
+                            name="email"
                             placeholder="Email"
                             onChange={(e) => this.handleEmailChange(e)}
                         ></StyledInput>
+                        {this.props.type !== 'login' && (
+                            <StyledInput
+                                type="email"
+                                name="email2"
+                                placeholder="Confirm email"
+                                onChange={(e) => this.setState({ email2: e.target.value })}
+                            ></StyledInput>
+                        )}
+
                         <StyledInput
                             type="password"
                             placeholder="Password"
