@@ -26,9 +26,8 @@ export const create = ({ body, url, callback }) => {
     })
 }
 
-export const get = ({}) => {
+export const get = (url, callback) => {
     const { headers } = createPrerequisites()
-
     axios({
         url: `http://localhost:9000/${url}`,
         method: 'GET',
@@ -57,4 +56,11 @@ export const remove = ({ body, url, callback }) => {
     }).then((res) => {
         callback(res)
     })
+}
+
+export default {
+    create,
+    get,
+    update,
+    remove,
 }
