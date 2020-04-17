@@ -2,6 +2,7 @@ import React from 'react'
 import Cookie from 'js-cookie'
 import axios from 'axios'
 import styled from 'styled-components'
+import { get } from '../../utils/utils'
 
 export const StyledForm = styled.form`
     display: block;
@@ -24,7 +25,19 @@ class CreateProduct extends React.Component {
             name: '',
             quantity: '',
             description: '',
+            categories: [],
+            category: '',
         }
+    }
+
+    componentDidMount() {
+        get('api/category', (res) => {
+            res && this.setState({ categories: res.data.data })
+        })
+    }
+
+    handleSelect = (ev) => {
+        this.setState({ category: ev.target.value })
     }
 
     handleSubmit = (ev) => {
@@ -52,6 +65,7 @@ class CreateProduct extends React.Component {
                 quantity: '',
                 price: '',
                 description: '',
+                category: '',
             })
         })
     }
@@ -88,6 +102,11 @@ class CreateProduct extends React.Component {
                     placeholder="Product description"
                     value={this.state.description}
                 ></textarea>
+                <select onChange={(ev) => this.handleSelect(ev)}>
+                    <option>Pick a category...</option>
+                    {this.state.categories &&
+                        this.state.categories.map((category, index) => <option key={index}>{category.name}</option>)}
+                </select>
                 <button
                     type="submit"
                     disabled={
