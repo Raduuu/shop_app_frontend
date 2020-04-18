@@ -5,6 +5,7 @@ import Pagination from '../Pagination/Pagination'
 import Cookie from 'js-cookie'
 import axios from 'axios'
 import styled from 'styled-components'
+import { get } from '../../utils/utils'
 
 const StyledList = styled(ProductsList)`
     margin-bottom: 60px;
@@ -24,19 +25,8 @@ class Products extends React.Component {
     }
 
     componentDidMount() {
-        const token = Cookie.get('token') ? Cookie.get('token') : null
-        const BearerToken = `Bearer ${token}`
-        const headers = {
-            'Content-Type': 'application/json',
-            Authorization: BearerToken,
-        }
-
-        axios({
-            url: 'http://localhost:9000/api/product/',
-            method: 'GET',
-            headers: headers,
-        }).then((res) => {
-            this.setState({ products: res.data.data, count: res.data.count })
+        get('api/product/', (res) => {
+            res && this.setState({ products: res.data.data, count: res.data.count })
         })
     }
 
@@ -57,19 +47,14 @@ class Products extends React.Component {
     }
 
     onChangePage = (page) => {
-        const token = Cookie.get('token') ? Cookie.get('token') : null
-        const BearerToken = `Bearer ${token}`
-        const headers = {
-            'Content-Type': 'application/json',
-            Authorization: BearerToken,
-        }
+        get(`api/product?page=${page}`, (res) => {
+            res && this.setState({ products: res.data.data })
+        })
+    }
 
-        axios({
-            url: `http://localhost:9000/api/product?page=${page}`,
-            method: 'GET',
-            headers: headers,
-        }).then((res) => {
-            this.setState({ products: res.data.data })
+    handleSelect = (category) => {
+        get(`api/product?category=${category}`, (res) => {
+            res && this.setState({ products: res.data.data })
         })
     }
 
@@ -84,6 +69,7 @@ class Products extends React.Component {
                     updateProducts={this.updateProducts}
                     isAdmin={isAdmin}
                     setCartProducts={this.props.setCartProducts}
+                    handleSelect={this.handleSelect}
                 />
                 <StyledPagination numberOfProducts={this.state.count} onChangePage={this.onChangePage} />
             </>
