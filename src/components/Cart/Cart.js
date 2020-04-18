@@ -56,7 +56,8 @@ class Cart extends React.Component {
             headers: headers,
             data: body,
         }).then((res) => {
-            Cookie.remove('cart')
+            Cookie.set('cart', [])
+            this.props.setCartProducts(0)
             Cookie.set('coins', remainingCoins)
             this.setState({ cartProds: undefined })
             this.props.history.push('/products')
@@ -74,6 +75,7 @@ class Cart extends React.Component {
             }
             i++
         }
+        this.setState({ cartProds: cart })
         Cookie.set('cart', cart)
     }
 
