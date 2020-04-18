@@ -95,7 +95,7 @@ const onDelete = (product, updateProducts) => {
     })
 }
 
-const addToCart = (product, updateProducts) => {
+const addToCart = (product, setCartProducts) => {
     let cart = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')) : []
     let found = false
     let total = 1
@@ -107,7 +107,7 @@ const addToCart = (product, updateProducts) => {
         }
     }
 
-    updateProducts(total)
+    setCartProducts(total)
 
     !found && cart.push({ _id: product._id, name: product.name, price: product.price, quantity: 1 })
 

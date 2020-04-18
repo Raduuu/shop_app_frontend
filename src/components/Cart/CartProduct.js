@@ -9,10 +9,12 @@ const Wrapper = styled.div`
     border-bottom: 1px solid #dccece;
 `
 
-const StyledButton = styled.button`
+const DeleteButton = styled.button`
     background-color: #dc3545;
     border-color: #dc3545;
     color: white;
+    cursor: pointer;
+    margin-left: 10px;
 `
 
 const CartProduct = ({ name, id, quantity, changeCartProducts, removeCartProduct }) => {
@@ -26,7 +28,7 @@ const CartProduct = ({ name, id, quantity, changeCartProducts, removeCartProduct
                     defaultValue={quantity}
                     onChange={(ev) => changeCartProducts(id, ev.target.value)}
                 />
-                <StyledButton onClick={() => removeCartProduct(id)}>Remove product</StyledButton>
+                <DeleteButton onClick={() => removeCartProduct(id)}>Remove product</DeleteButton>
             </Wrapper>
         </>
     )

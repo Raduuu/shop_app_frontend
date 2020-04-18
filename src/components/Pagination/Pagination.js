@@ -18,7 +18,6 @@ const Pagination = ({ numberOfProducts, onChangePage }) => {
             {arrOfPages.map((page) => (
                 <>
                     <a
-                        // href={`?page=${page}`}
                         href="#"
                         key={page}
                         onClick={(ev) => {
