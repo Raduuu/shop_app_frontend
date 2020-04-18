@@ -20,17 +20,6 @@ class App extends React.Component {
         }
     }
 
-    componentDidMount = () => {
-        const cart = JSON.parse(Cookie.get('cart')) || undefined
-        let total = 0
-        if (cart) {
-            for (let i = 0; i < cart.length; i++) {
-                total = total + cart[i].quantity
-            }
-            this.setState({ cartProducts: total })
-        }
-    }
-
     setIsLoggedIn = ({ token, email, isAdmin, coins }) => {
         token && Cookie.set('token', token)
         email && Cookie.set('email', email)
