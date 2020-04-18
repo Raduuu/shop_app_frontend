@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, withRouter, Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 import Cookie from 'js-cookie'
+import { validateEmail } from '../../utils/utils'
 
 const Wrapper = styled.div`
     width: 100%;
@@ -56,7 +57,16 @@ class Login extends React.Component {
         this.state = {
             email: '',
             password: '',
+            apiResponse: null,
         }
+    }
+
+    componentDidMount() {
+        this.setState({
+            email: '',
+            password: '',
+            apiResponse: null,
+        })
     }
 
     onSubmit = (ev) => {
@@ -72,32 +82,36 @@ class Login extends React.Component {
         }
         const { type } = this.props
 
-        if (email !== this.state.email2) {
-            this.setState({ emailError: "Emails don't match" })
+        if (!validateEmail(email)) {
+            this.setState({ emailError: 'Email is not valid' })
         } else {
-            this.setState({ emailError: undefined })
-            fetch(`http://localhost:9000/${type === 'login' ? 'signin' : 'signup'}`, {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(body),
-            })
-                .then((res) => res.text())
-                .then((res) => {
-                    let apiResponse
-                    if (this.props.type === 'signup') {
-                        apiResponse = JSON.parse(res)
-                    } else {
-                        apiResponse = res !== '' && res !== undefined && JSON.parse(res)
-                    }
-                    this.setState({ apiResponse: res })
-                    if (apiResponse.token && this.props.type === 'login') {
-                        let { token, email, admin, coins } = apiResponse
-                        this.props.setIsLoggedIn({ token, email, isAdmin: admin, coins })
-                        this.props.history.push('/products')
-                    } else if (this.props.type === 'signup') {
-                        this.props.history.push('/login')
-                    }
+            if (this.props.type !== 'login' && email !== this.state.email2) {
+                this.setState({ emailError: "Emails don't match" })
+            } else {
+                this.setState({ emailError: undefined })
+                fetch(`http://localhost:9000/${type === 'login' ? 'signin' : 'signup'}`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(body),
                 })
+                    .then((res) => res.text())
+                    .then((res) => {
+                        let apiResponse
+                        if (this.props.type === 'signup') {
+                            apiResponse = JSON.parse(res)
+                        } else {
+                            apiResponse = res !== '' && res !== undefined && JSON.parse(res)
+                        }
+                        this.setState({ apiResponse: res })
+                        if (apiResponse.token && this.props.type === 'login') {
+                            let { token, email, admin, coins } = apiResponse
+                            this.props.setIsLoggedIn({ token, email, isAdmin: admin, coins })
+                            this.props.history.push('/products')
+                        } else if (this.props.type === 'signup') {
+                            this.props.history.push('/login')
+                        }
+                    })
+            }
         }
     }
 
