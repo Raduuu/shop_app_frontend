@@ -20,9 +20,17 @@ class Header extends React.Component {
         this.props.history.push('/login')
     }
 
+    getCartProducts = () => {
+        let cart = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')) : []
+        let total = 0
+        for (let i = 0; i < cart.length; i++) {
+            total = total + parseInt(cart[i].quantity)
+        }
+        return total
+    }
     render() {
         const isAdmin = Cookie.get('isAdmin')
-        const { cartProducts } = this.props
+        const cartProducts = this.getCartProducts()
         return (
             <StyledList>
                 <li>
