@@ -15,6 +15,7 @@ const createPrerequisites = () => {
 }
 
 export const validateEmail = (email) => {
+    // eslint-disable-next-line
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     if (email.match(mailformat)) {
         return true
@@ -23,16 +24,22 @@ export const validateEmail = (email) => {
     }
 }
 
-export const create = ({ body, url, callback }) => {
+// could be more than 1 callback
+export const create = (body, url, callback, errCallback) => {
     const { headers } = createPrerequisites()
     axios({
         url: `http://localhost:9000/${url}`,
         method: 'POST',
         headers: headers,
         data: JSON.stringify(body),
-    }).then((res) => {
-        callback(res)
     })
+        // .then((res) => res.text())
+        .then((res) => {
+            callback(res)
+        })
+        .catch((err) => {
+            errCallback ? errCallback(err) : console.error(err)
+        })
 }
 
 export const get = (url, callback) => {
@@ -46,7 +53,7 @@ export const get = (url, callback) => {
     })
 }
 
-export const update = ({ url, body, callback }) => {
+export const update = (url, body, callback) => {
     const { headers } = createPrerequisites()
 
     axios.put(`http://localhost:9000/${url}`, body, { headers: headers }).then((res) => {
@@ -54,14 +61,13 @@ export const update = ({ url, body, callback }) => {
     })
 }
 
-export const remove = ({ body, url, callback }) => {
+export const remove = (url, callback) => {
     const { headers } = createPrerequisites()
 
     axios({
         url: `http://localhost:9000/api/${url}`,
         method: 'DELETE',
         headers: headers,
-        body: body,
     }).then((res) => {
         callback(res)
     })

@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import Cookie from 'js-cookie'
 
 const Wrapper = styled.div`
     display: block;

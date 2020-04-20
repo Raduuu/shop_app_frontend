@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash, faCartPlus } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
-import axios from 'axios'
 import Cookie from 'js-cookie'
 import { StyledForm } from './CreateProduct'
+import { update, remove } from '../../utils/utils'
 
 const Wrapper = styled.div`
     text-align: left;
@@ -50,13 +50,6 @@ const onEdit = ({
     editProduct,
 }) => {
     ev.preventDefault()
-    const token = Cookie.get('token') ? Cookie.get('token') : null
-    const BearerToken = `Bearer ${token}`
-    const headers = {
-        'Content-Type': 'application/json',
-        Authorization: BearerToken,
-    }
-
     const body = {
         params: { id: product._id },
         createdBy: product.createdBy,
@@ -65,7 +58,7 @@ const onEdit = ({
         quantity,
     }
 
-    axios.put(`http://localhost:9000/api/product/${product._id}`, body, { headers: headers }).then((res) => {
+    update(`api/product/${product._id}`, body, (res) => {
         editProduct(res.data)
         setName('')
         setDescription('')
@@ -76,21 +69,7 @@ const onEdit = ({
 }
 
 const onDelete = (product, updateProducts) => {
-    const token = Cookie.get('token') ? Cookie.get('token') : null
-    const BearerToken = `Bearer ${token}`
-    const headers = {
-        'Content-Type': 'application/json',
-        Authorization: BearerToken,
-    }
-
-    axios({
-        url: `http://localhost:9000/api/product/${product._id}`,
-        method: 'DELETE',
-        headers: headers,
-        body: {
-            _id: product._id,
-        },
-    }).then((res) => {
+    remove({ _id: product._id }, `api/product/${product._id}`, (res) => {
         updateProducts(res.data, 'delete')
     })
 }

@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
-import Cookie from 'js-cookie'
-import axios from 'axios'
+import { update, remove } from '../../utils/utils'
 
 const Wrapper = styled.div`
     display: flex;
@@ -32,18 +31,12 @@ const StyledIcon = styled(FontAwesomeIcon)`
 
 const onEdit = ({ ev, id, newEmail, isAdmin, setNewEmail, setIsAdmin, setEdit, editUser }) => {
     ev.preventDefault()
-    const token = Cookie.get('token') ? Cookie.get('token') : null
-    const BearerToken = `Bearer ${token}`
-    const headers = {
-        'Content-Type': 'application/json',
-        Authorization: BearerToken,
-    }
     const body = {
         email: newEmail,
         admin: isAdmin,
     }
 
-    axios.put(`http://localhost:9000/api/user/${id}`, body, { headers: headers }).then((res) => {
+    update(`api/user/${id}`, body, (res) => {
         editUser(res.data)
         // updateUsers(res.data, 'update')
         setNewEmail('')
@@ -53,18 +46,7 @@ const onEdit = ({ ev, id, newEmail, isAdmin, setNewEmail, setIsAdmin, setEdit, e
 }
 
 const onDelete = (id, updateUsers) => {
-    const token = Cookie.get('token') ? Cookie.get('token') : null
-    const BearerToken = `Bearer ${token}`
-    const headers = {
-        'Content-Type': 'application/json',
-        Authorization: BearerToken,
-    }
-
-    axios({
-        url: `http://localhost:9000/api/user/${id}`,
-        method: 'DELETE',
-        headers: headers,
-    }).then((res) => {
+    remove(`api/user/${id}`, (res) => {
         updateUsers(res.data, 'delete')
     })
 }

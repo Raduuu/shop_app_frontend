@@ -3,7 +3,6 @@ import CreateProduct from './CreateProduct'
 import ProductsList from './ProductsList'
 import Pagination from '../Pagination/Pagination'
 import Cookie from 'js-cookie'
-import axios from 'axios'
 import styled from 'styled-components'
 import { get } from '../../utils/utils'
 

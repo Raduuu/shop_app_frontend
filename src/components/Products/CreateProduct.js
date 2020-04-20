@@ -1,8 +1,7 @@
 import React from 'react'
 import Cookie from 'js-cookie'
-import axios from 'axios'
 import styled from 'styled-components'
-import { get } from '../../utils/utils'
+import { get, create } from '../../utils/utils'
 
 export const StyledForm = styled.form`
     display: block;
@@ -43,22 +42,11 @@ class CreateProduct extends React.Component {
     handleSubmit = (ev) => {
         const { updateProducts } = this.props
         ev.preventDefault()
-        const token = Cookie.get('token') ? Cookie.get('token') : null
-        const BearerToken = `Bearer ${token}`
         const body = {
             ...this.state,
-            BearerToken,
         }
-        const headers = {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        }
-        axios({
-            url: 'http://localhost:9000/api/product',
-            method: 'POST',
-            headers: headers,
-            data: JSON.stringify(body),
-        }).then((res) => {
+
+        create(body, 'api/product', (res) => {
             updateProducts(res.data)
             this.setState({
                 name: '',
@@ -113,7 +101,8 @@ class CreateProduct extends React.Component {
                         this.state.name === '' ||
                         this.state.quantity === '' ||
                         this.state.price === '' ||
-                        this.state.description === ''
+                        this.state.description === '' ||
+                        this.state.category === ''
                     }
                     onClick={(ev) => this.handleSubmit(ev)}
                 >

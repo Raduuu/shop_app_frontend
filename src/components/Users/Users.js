@@ -1,9 +1,7 @@
 import React from 'react'
-// import EditForm from '../EditForm/NewForm'
 import UsersList from './UsersList'
-import Cookie from 'js-cookie'
-import axios from 'axios'
 import styled from 'styled-components'
+import { get } from '../../utils/utils'
 
 const Wrapper = styled.div`
     width: 600px;
@@ -20,26 +18,15 @@ class Users extends React.Component {
     }
 
     componentDidMount() {
-        const token = Cookie.get('token') ? Cookie.get('token') : null
-        const BearerToken = `Bearer ${token}`
-        const headers = {
-            'Content-Type': 'application/json',
-            Authorization: BearerToken,
-        }
-
-        axios({
-            url: 'http://localhost:9000/api/user/',
-            method: 'GET',
-            headers: headers,
-        }).then(res => {
+        get('api/user/', (res) => {
             this.setState({ users: res.data.data })
         })
     }
 
-    editUser = user => {
-        this.setState(prevState => {
+    editUser = (user) => {
+        this.setState((prevState) => {
             const users = [...prevState.users]
-            const index = users.findIndex(elem => elem._id === user.data._id)
+            const index = users.findIndex((elem) => elem._id === user.data._id)
             users[index] = user.data
             return { users }
         })
@@ -48,7 +35,7 @@ class Users extends React.Component {
         if (type === 'update') {
             this.setState({ users: [...this.state.users, user.data] })
         } else if (type === 'delete') {
-            this.setState({ users: this.state.users.filter(item => item._id !== user.data._id) })
+            this.setState({ users: this.state.users.filter((item) => item._id !== user.data._id) })
         }
     }
 

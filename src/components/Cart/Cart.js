@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import CartProduct from './CartProduct'
 import { withRouter } from 'react-router-dom'
 import Cookie from 'js-cookie'
-import axios from 'axios'
 import styled from 'styled-components'
+import { create } from '../../utils/utils'
 
 const StyledButton = styled.button`
     border-radius: 4px;
@@ -38,24 +38,13 @@ class Cart extends React.Component {
     }
 
     onCheckout = (cartProducts) => {
-        const token = Cookie.get('token') ? Cookie.get('token') : null
-        const BearerToken = `Bearer ${token}`
         const spentCoins = cartProducts.reduce((acc, curr) => {
             return acc + curr.price * curr.quantity
         }, 0)
         const remainingCoins = Cookie.get('coins') - spentCoins
-        const headers = {
-            'Content-Type': 'application/json',
-            Authorization: BearerToken,
-        }
         const body = { products: cartProducts }
 
-        axios({
-            url: 'http://localhost:9000/api/checkout/',
-            method: 'POST',
-            headers: headers,
-            data: body,
-        }).then((res) => {
+        create(body, 'api/checkout/', () => {
             Cookie.set('cart', [])
             this.props.setCartProducts(0)
             Cookie.set('coins', remainingCoins)

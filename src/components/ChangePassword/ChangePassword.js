@@ -1,6 +1,6 @@
 import React from 'react'
-import axios from 'axios'
 import Cookie from 'js-cookie'
+import { create } from '../../utils/utils'
 
 class PasswordPage extends React.Component {
     constructor(props) {
@@ -15,13 +15,7 @@ class PasswordPage extends React.Component {
 
     handleSubmit = (ev) => {
         ev.preventDefault()
-        const token = Cookie.get('token') ? Cookie.get('token') : null
-        const BearerToken = `Bearer ${token}`
-        const headers = {
-            'Content-Type': 'application/json',
-            Authorization: BearerToken,
-        }
-
+        debugger
         if (this.state.newpassword !== this.state.newpassword2) {
             this.setState({ error: "Passwords don't match" })
         } else {
@@ -30,15 +24,18 @@ class PasswordPage extends React.Component {
                 oldpassword: this.state.oldpassword,
                 newpassword: this.state.newpassword,
             }
-            axios
-                .post('http://localhost:9000/api/changepassword', body, { headers: headers })
-                .then((res) => {
+
+            create(
+                body,
+                'api/changepassword',
+                (res) => {
                     this.setState({ success: res.data.message })
-                })
-                .catch((err) => {
+                },
+                (err) => {
                     this.setState({ success: undefined, error: 'an error has occured' })
                     console.error(err)
-                })
+                },
+            )
         }
     }
 
@@ -52,7 +49,12 @@ class PasswordPage extends React.Component {
                     placeholder="Old Password"
                     onChange={(ev) => this.setState({ oldpassword: ev.target.value })}
                 />
-                <input name="newpassword" type="password" placeholder="New Password" />
+                <input
+                    name="newpassword"
+                    type="password"
+                    placeholder="New Password"
+                    onChange={(ev) => this.setState({ newpassword: ev.target.value })}
+                />
                 <input
                     name="newpassword2"
                     type="password"
