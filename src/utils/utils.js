@@ -65,7 +65,7 @@ export const remove = (url, callback) => {
     const { headers } = createPrerequisites()
 
     axios({
-        url: `http://localhost:9000/api/${url}`,
+        url: `http://localhost:9000/${url}`,
         method: 'DELETE',
         headers: headers,
     }).then((res) => {
