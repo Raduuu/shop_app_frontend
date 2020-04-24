@@ -20,6 +20,7 @@ class Products extends React.Component {
         this.state = {
             products: [],
             count: 0,
+            category: 'all',
         }
     }
 
@@ -38,7 +39,7 @@ class Products extends React.Component {
         })
     }
     updateProducts = (product, type = 'update') => {
-        if (type === 'update' && this.state.products.length <= 10) {
+        if (type === 'update' && this.state.products.length < 10) {
             this.setState({ products: [...this.state.products, product.data] })
         } else if (type === 'delete') {
             this.setState({ products: this.state.products.filter((item) => item._id !== product.data._id) })
@@ -46,15 +47,16 @@ class Products extends React.Component {
     }
 
     onChangePage = (page) => {
-        get(`api/product?page=${page}`, (res) => {
+        get(`api/product?page=${page}&category=${this.state.category}`, (res) => {
             res && this.setState({ products: res.data.data })
         })
     }
 
     handleSelect = (category) => {
         get(`api/product?category=${category}`, (res) => {
-            res && this.setState({ products: res.data.data })
+            res && this.setState({ products: res.data.data, count: res.data.count })
         })
+        this.setState({ category: category })
     }
 
     handleSearch = (text) => {
@@ -83,6 +85,7 @@ class Products extends React.Component {
                     handleSelect={this.handleSelect}
                     handleSearch={this.handleSearch}
                 />
+
                 <StyledPagination numberOfProducts={this.state.count} onChangePage={this.onChangePage} />
             </>
         )
