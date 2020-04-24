@@ -1,4 +1,5 @@
 import React from 'react'
+import FilterBar from './FilterBar'
 import Product from './Product'
 import { get } from '../../utils/utils'
 
@@ -29,17 +30,7 @@ export default class ProductsList extends React.Component {
 
         return (
             <>
-                <select onChange={(ev) => handleSelect(ev.target.value)}>
-                    <option>all</option>
-                    {this.state.categories &&
-                        this.state.categories.map((category, index) => <option key={index}>{category.name}</option>)}
-                </select>
-                <input
-                    placeholder="Search..."
-                    type="text"
-                    name="search"
-                    onChange={(ev) => handleSearch(ev.target.value)}
-                />
+                <FilterBar handleSelect={handleSelect} handleSearch={handleSearch} categories={this.state.categories} />
                 {products.map((product) => (
                     <Product
                         updateProducts={updateProducts}
