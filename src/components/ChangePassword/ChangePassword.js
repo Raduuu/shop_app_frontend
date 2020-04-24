@@ -1,7 +1,25 @@
 import React from 'react'
 import Cookie from 'js-cookie'
-import { create } from '../../utils/utils'
+import { post } from '../../utils/utils'
+import styled from 'styled-components'
 
+const StyledError = styled.p`
+    color: red;
+    font-size: 12px;
+`
+
+const Success = styled.p`
+    color: green;
+    font-size: 12px;
+`
+
+const StyledInput = styled.input`
+    display: block;
+    margin-bottom: 10px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+`
 class PasswordPage extends React.Component {
     constructor(props) {
         super(props)
@@ -15,7 +33,6 @@ class PasswordPage extends React.Component {
 
     handleSubmit = (ev) => {
         ev.preventDefault()
-        debugger
         if (this.state.newpassword !== this.state.newpassword2) {
             this.setState({ error: "Passwords don't match" })
         } else {
@@ -25,14 +42,16 @@ class PasswordPage extends React.Component {
                 newpassword: this.state.newpassword,
             }
 
-            create(
+            post(
                 body,
                 'api/changepassword',
                 (res) => {
-                    this.setState({ success: res.data.message })
+                    console.log('res', res)
+                    debugger
+                    this.setState({ error: undefined, success: res.data.message })
                 },
                 (err) => {
-                    this.setState({ success: undefined, error: 'an error has occured' })
+                    this.setState({ success: undefined, error: err.response.data.message })
                     console.error(err)
                 },
             )
@@ -42,20 +61,21 @@ class PasswordPage extends React.Component {
     render() {
         return (
             <form noValidate>
-                <p>{this.state.success ? this.state.success : this.state.error}</p>
-                <input
+                {this.state.error && <StyledError>{this.state.error}</StyledError>}
+                {this.state.success && <Success>{this.state.success}</Success>}
+                <StyledInput
                     name="oldpassword"
                     type="password"
                     placeholder="Old Password"
                     onChange={(ev) => this.setState({ oldpassword: ev.target.value })}
                 />
-                <input
+                <StyledInput
                     name="newpassword"
                     type="password"
                     placeholder="New Password"
                     onChange={(ev) => this.setState({ newpassword: ev.target.value })}
                 />
-                <input
+                <StyledInput
                     name="newpassword2"
                     type="password"
                     placeholder="Again your new password"
