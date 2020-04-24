@@ -3,7 +3,7 @@ import CartProduct from './CartProduct'
 import { withRouter } from 'react-router-dom'
 import Cookie from 'js-cookie'
 import styled from 'styled-components'
-import { create } from '../../utils/utils'
+import { post } from '../../utils/utils'
 
 const StyledButton = styled.button`
     border-radius: 4px;
@@ -17,6 +17,11 @@ const StyledButton = styled.button`
         background-color: #218838;
         border-color: #1e7e34;
     }
+`
+
+const Error = styled.p`
+    color: red;
+    font-size: 12px;
 `
 
 const Wrapper = styled.div`
@@ -44,7 +49,8 @@ class Cart extends React.Component {
         const remainingCoins = Cookie.get('coins') - spentCoins
         const body = { products: cartProducts }
 
-        create(body, 'api/checkout/', () => {
+        post(body, 'api/checkout/', (res) => {
+            this.setState({ apiResponse: res })
             Cookie.set('cart', [])
             this.props.setCartProducts(0)
             Cookie.set('coins', remainingCoins)
@@ -86,6 +92,7 @@ class Cart extends React.Component {
         const { cartProds } = this.state
         return cartProds ? (
             <Wrapper>
+                {this.state.apiResponse && <Error>{this.state.apiResponse.message}</Error>}
                 {cartProds.map((cartProduct) => (
                     <CartProduct
                         key={cartProduct._id}
