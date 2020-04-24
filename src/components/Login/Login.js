@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import Cookie from 'js-cookie'
-import { validateEmail, create } from '../../utils/utils'
+import { validateEmail, post } from '../../utils/utils'
 
 const Wrapper = styled.div`
     width: 100%;
@@ -86,20 +86,25 @@ class Login extends React.Component {
                 this.setState({ emailError: "Emails don't match" })
             } else {
                 this.setState({ emailError: undefined })
-
-                create(body, `${type === 'login' ? 'signin' : 'signup'}`, (res) => {
-                    let apiResponse
-
-                    apiResponse = res !== '' && res !== undefined && res.data
-                    this.setState({ apiResponse: apiResponse })
-                    if (apiResponse.token && this.props.type === 'login') {
-                        let { token, email, admin, coins } = apiResponse
-                        this.props.setIsLoggedIn({ token, email, isAdmin: admin, coins })
-                        this.props.history.push('/products')
-                    } else if (this.props.type === 'signup') {
-                        this.props.history.push('/login')
-                    }
-                })
+                post(
+                    body,
+                    `${type === 'login' ? 'signin' : 'signup'}`,
+                    (res) => {
+                        let apiResponse
+                        apiResponse = res !== '' && res !== undefined && res.data
+                        this.setState({ apiResponse: apiResponse })
+                        if (apiResponse.token && this.props.type === 'login') {
+                            let { token, email, admin, coins } = apiResponse
+                            this.props.setIsLoggedIn({ token, email, isAdmin: admin, coins })
+                            this.props.history.push('/products')
+                        } else if (this.props.type === 'signup') {
+                            this.props.history.push('/login')
+                        }
+                    },
+                    (err) => {
+                        err.response && err.response.data && this.setState({ apiResponse: err.response.data })
+                    },
+                )
             }
         }
     }
