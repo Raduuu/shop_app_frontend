@@ -1,7 +1,6 @@
 import React from 'react'
-import Cookie from 'js-cookie'
 import styled from 'styled-components'
-import { get, create } from '../../utils/utils'
+import { get, post } from '../../utils/utils'
 
 export const StyledForm = styled.form`
     display: block;
@@ -46,8 +45,9 @@ class CreateProduct extends React.Component {
             ...this.state,
         }
 
-        create(body, 'api/product', (res) => {
+        post(body, 'api/product', (res) => {
             updateProducts(res.data)
+
             this.setState({
                 name: '',
                 quantity: '',
@@ -90,7 +90,7 @@ class CreateProduct extends React.Component {
                     placeholder="Product description"
                     value={this.state.description}
                 ></textarea>
-                <select onChange={(ev) => this.handleSelect(ev)}>
+                <select onChange={(ev) => this.handleSelect(ev)} value={this.state.category}>
                     <option>Pick a category...</option>
                     {this.state.categories &&
                         this.state.categories.map((category, index) => <option key={index}>{category.name}</option>)}
