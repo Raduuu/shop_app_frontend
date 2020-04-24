@@ -49,14 +49,21 @@ class Cart extends React.Component {
         const remainingCoins = Cookie.get('coins') - spentCoins
         const body = { products: cartProducts }
 
-        post(body, 'api/checkout/', (res) => {
-            this.setState({ apiResponse: res })
-            Cookie.set('cart', [])
-            this.props.setCartProducts(0)
-            Cookie.set('coins', remainingCoins)
-            this.setState({ cartProds: undefined })
-            this.props.history.push('/products')
-        })
+        post(
+            body,
+            'api/checkout/',
+            (res) => {
+                this.setState({ apiResponse: res })
+                Cookie.set('cart', [])
+                this.props.setCartProducts(0)
+                Cookie.set('coins', remainingCoins)
+                this.setState({ cartProds: undefined })
+                this.props.history.push('/products')
+            },
+            (err) => {
+                this.setState({ apiResponse: err.response.data })
+            },
+        )
     }
 
     changeCartProducts = (id, quantity) => {
