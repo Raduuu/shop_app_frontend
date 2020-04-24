@@ -59,6 +59,13 @@ class Products extends React.Component {
         this.setState({ category: category })
     }
 
+    handlePriceSelect = (price) => {
+        get(`api/product?price=${price}`, (res) => {
+            res && this.setState({ products: res.data.data, count: res.data.count })
+        })
+        this.setState({ price: price })
+    }
+
     handleSearch = (text) => {
         if (text) {
             get(`api/search?query=${text}`, (res) => {
@@ -84,6 +91,7 @@ class Products extends React.Component {
                     setCartProducts={this.props.setCartProducts}
                     handleSelect={this.handleSelect}
                     handleSearch={this.handleSearch}
+                    handlePriceSelect={this.handlePriceSelect}
                 />
 
                 <StyledPagination numberOfProducts={this.state.count} onChangePage={this.onChangePage} />

@@ -26,11 +26,17 @@ export default class ProductsList extends React.Component {
             setCartProducts,
             handleSelect,
             handleSearch,
+            handlePriceSelect,
         } = this.props
 
         return (
             <>
-                <FilterBar handleSelect={handleSelect} handleSearch={handleSearch} categories={this.state.categories} />
+                <FilterBar
+                    handleSelect={handleSelect}
+                    handlePriceSelect={handlePriceSelect}
+                    handleSearch={handleSearch}
+                    categories={this.state.categories}
+                />
                 {products.map((product) => (
                     <Product
                         updateProducts={updateProducts}

@@ -8,11 +8,17 @@ const FlexWrapper = styled.div`
 `
 export default class FilterBar extends React.Component {
     render() {
-        const { handleSearch, handleSelect, categories } = this.props
+        const { handleSearch, handleSelect, handlePriceSelect, categories } = this.props
         return (
             <FlexWrapper>
+                <select onChange={(ev) => handlePriceSelect(ev.target.value)}>
+                    <option>Price</option>
+                    <option value="20">&#60;20</option>
+                    <option value="50">&#60;50</option>
+                    <option value="100">&#60;100</option>
+                </select>
                 <select onChange={(ev) => handleSelect(ev.target.value)}>
-                    <option>all</option>
+                    <option>Category</option>
                     {categories && categories.map((category, index) => <option key={index}>{category.name}</option>)}
                 </select>
                 <input
