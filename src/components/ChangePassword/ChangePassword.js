@@ -46,8 +46,6 @@ class PasswordPage extends React.Component {
                 body,
                 'api/changepassword',
                 (res) => {
-                    console.log('res', res)
-                    debugger
                     this.setState({ error: undefined, success: res.data.message })
                 },
                 (err) => {
