@@ -25,7 +25,7 @@ export const validateEmail = (email) => {
 }
 
 // could be more than 1 callback
-export const create = (body, url, callback, errCallback) => {
+export const post = (body, url, callback, errCallback) => {
     const { headers } = createPrerequisites()
     axios({
         url: `http://localhost:9000/${url}`,
@@ -33,7 +33,6 @@ export const create = (body, url, callback, errCallback) => {
         headers: headers,
         data: JSON.stringify(body),
     })
-        // .then((res) => res.text())
         .then((res) => {
             callback(res)
         })
@@ -75,7 +74,7 @@ export const remove = (url, callback) => {
 
 export default {
     validateEmail,
-    create,
+    post,
     get,
     update,
     remove,

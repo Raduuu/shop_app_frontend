@@ -38,7 +38,7 @@ class Products extends React.Component {
         })
     }
     updateProducts = (product, type = 'update') => {
-        if (type === 'update') {
+        if (type === 'update' && this.state.products.length <= 10) {
             this.setState({ products: [...this.state.products, product.data] })
         } else if (type === 'delete') {
             this.setState({ products: this.state.products.filter((item) => item._id !== product.data._id) })
@@ -57,6 +57,18 @@ class Products extends React.Component {
         })
     }
 
+    handleSearch = (text) => {
+        if (text) {
+            get(`api/search?query=${text}`, (res) => {
+                res && this.setState({ products: res.data.products })
+            })
+        } else {
+            get('api/product/', (res) => {
+                res && this.setState({ products: res.data.data, count: res.data.count })
+            })
+        }
+    }
+
     render() {
         const isAdmin = Cookie.get('isAdmin')
         return (
@@ -69,6 +81,7 @@ class Products extends React.Component {
                     isAdmin={isAdmin}
                     setCartProducts={this.props.setCartProducts}
                     handleSelect={this.handleSelect}
+                    handleSearch={this.handleSearch}
                 />
                 <StyledPagination numberOfProducts={this.state.count} onChangePage={this.onChangePage} />
             </>

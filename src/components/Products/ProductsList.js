@@ -17,7 +17,15 @@ export default class ProductsList extends React.Component {
     }
 
     render() {
-        const { products, updateProducts, editProduct, isAdmin, setCartProducts, handleSelect } = this.props
+        const {
+            products,
+            updateProducts,
+            editProduct,
+            isAdmin,
+            setCartProducts,
+            handleSelect,
+            handleSearch,
+        } = this.props
 
         return (
             <>
@@ -26,6 +34,12 @@ export default class ProductsList extends React.Component {
                     {this.state.categories &&
                         this.state.categories.map((category, index) => <option key={index}>{category.name}</option>)}
                 </select>
+                <input
+                    placeholder="Search..."
+                    type="text"
+                    name="search"
+                    onChange={(ev) => handleSearch(ev.target.value)}
+                />
                 {products.map((product) => (
                     <Product
                         updateProducts={updateProducts}
