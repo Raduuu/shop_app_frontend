@@ -17,6 +17,7 @@ const Pagination = ({ numberOfProducts, onChangePage }) => {
             {numberOfPages > 0 && <h4>{`page ${pageNumber} of ${numberOfPages}`}</h4>}
             {arrOfPages.map((page) => (
                 <>
+                    {/* eslint-disable-next-line */}
                     <a
                         href="#"
                         key={page}
