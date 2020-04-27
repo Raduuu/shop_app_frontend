@@ -69,7 +69,7 @@ class Products extends React.Component {
     handleSearch = (text) => {
         if (text) {
             get(`api/search?query=${text}`, (res) => {
-                res && this.setState({ products: res.data.products })
+                res && this.setState({ products: res.data.products, count: res.data.count })
             })
         } else {
             get('api/product/', (res) => {
