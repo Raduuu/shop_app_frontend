@@ -12,12 +12,12 @@ const StyledList = styled.ul`
 
 class Header extends React.Component {
     handleLogout = () => {
+        this.props.history.push('/login')
         Cookie.remove('token')
         Cookie.remove('email')
         Cookie.remove('isAdmin')
         Cookie.remove('cart')
         Cookie.remove('coins')
-        this.props.history.push('/login')
     }
 
     getCartProducts = () => {
@@ -32,28 +32,30 @@ class Header extends React.Component {
         const isAdmin = Cookie.get('isAdmin')
         const cartProducts = this.getCartProducts()
         return (
-            <StyledList>
-                <li>
-                    <Link to="/products">Products</Link>
-                </li>
-                {isAdmin && (
+            Cookie.get('token') && (
+                <StyledList>
                     <li>
-                        <Link to="/users">Users</Link>
+                        <Link to="/products">Products</Link>
                     </li>
-                )}
-                <li>
-                    <Link to="/password">Change password</Link>
-                </li>
-                <li>
-                    <Link to="/cart">{`Cart(${cartProducts})`}</Link>
-                </li>
-                <li>
-                    {/* eslint-disable-next-line */}
-                    <a href="" onClick={this.handleLogout}>
-                        Logout
-                    </a>
-                </li>
-            </StyledList>
+                    {isAdmin && (
+                        <li>
+                            <Link to="/users">Users</Link>
+                        </li>
+                    )}
+                    <li>
+                        <Link to="/password">Change password</Link>
+                    </li>
+                    <li>
+                        <Link to="/cart">{`Cart(${cartProducts})`}</Link>
+                    </li>
+                    <li>
+                        {/* eslint-disable-next-line */}
+                        <a href="" onClick={this.handleLogout}>
+                            Logout
+                        </a>
+                    </li>
+                </StyledList>
+            )
         )
     }
 }
