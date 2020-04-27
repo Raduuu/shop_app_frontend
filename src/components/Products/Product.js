@@ -69,7 +69,7 @@ const onEdit = ({
 }
 
 const onDelete = (product, updateProducts) => {
-    remove({ _id: product._id }, `api/product/${product._id}`, (res) => {
+    remove(`api/product/${product._id}`, (res) => {
         updateProducts(res.data, 'delete')
     })
 }
