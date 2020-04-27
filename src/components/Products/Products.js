@@ -20,7 +20,7 @@ class Products extends React.Component {
         this.state = {
             products: [],
             count: 0,
-            category: 'all',
+            category: 'Category',
         }
     }
 
