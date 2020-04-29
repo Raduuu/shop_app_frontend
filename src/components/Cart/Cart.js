@@ -57,6 +57,7 @@ class Cart extends React.Component {
                 Cookie.set('cart', [])
                 this.props.setCartProducts(0)
                 Cookie.set('coins', remainingCoins)
+                this.props.setCoins(remainingCoins)
                 this.setState({ cartProds: undefined })
                 this.props.history.push('/products')
             },

@@ -36,6 +36,10 @@ class App extends React.Component {
         this.setState({ cartProducts: cartNumber })
     }
 
+    setCoins = (coins) => {
+        this.setState({ coins: coins })
+    }
+
     render() {
         const token = Cookie.get('token')
         const email = Cookie.get('email')
@@ -67,7 +71,7 @@ class App extends React.Component {
                             <Users></Users>
                         </Route>
                         <Route path="/cart">
-                            <Cart setCartProducts={this.setCartProducts}></Cart>
+                            <Cart setCartProducts={this.setCartProducts} setCoins={this.setCoins}></Cart>
                         </Route>
                         <Route
                             path="/"
