@@ -4,7 +4,7 @@
     "rules": {
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
-        "react/prop-types": ["error"]
+        "react/prop-types": "enabled"
     },
     "parser": "babel-eslint",
     "parserOptions": {
