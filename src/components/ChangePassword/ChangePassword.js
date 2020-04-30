@@ -2,6 +2,7 @@ import React from 'react'
 import Cookie from 'js-cookie'
 import { post } from '../../utils/utils'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 const StyledError = styled.p`
     color: red;
@@ -85,6 +86,14 @@ class PasswordPage extends React.Component {
             </form>
         )
     }
+}
+
+PasswordPage.propTypes = {
+    email: PropTypes.string,
+}
+
+PasswordPage.defaultProps = {
+    email: '',
 }
 
 export default PasswordPage

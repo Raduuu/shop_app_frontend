@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import Cookie from 'js-cookie'
 import { StyledForm } from './CreateProduct'
 import { update, remove } from '../../utils/utils'
+import PropTypes from 'prop-types'
 
 const Wrapper = styled.div`
     text-align: left;
@@ -183,6 +184,22 @@ const Product = ({ product, updateProducts, editProduct, isAdmin, setCartProduct
             )}
         </Wrapper>
     )
+}
+
+Product.propTypes = {
+    product: PropTypes.object,
+    updateProducts: PropTypes.func,
+    editProduct: PropTypes.func,
+    isAdmin: PropTypes.bool,
+    setCartProducts: PropTypes.func,
+}
+
+Product.defaultProps = {
+    product: {},
+    updateProducts: () => {},
+    editProduct: () => {},
+    isAdmin: false,
+    setCartProducts: () => {},
 }
 
 export default Product

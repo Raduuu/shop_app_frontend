@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import Cookie from 'js-cookie'
+import PropTypes from 'prop-types'
 
 const StyledList = styled.ul`
     li {
@@ -58,6 +59,11 @@ class Header extends React.Component {
             )
         )
     }
+}
+
+Header.propTypes = {
+    setLoggedIn: PropTypes.func,
+    cartProducts: PropTypes.array,
 }
 
 export default withRouter(Header)

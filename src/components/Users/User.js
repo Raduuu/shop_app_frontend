@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
 import { update, remove } from '../../utils/utils'
+import PropTypes from 'prop-types'
 
 const Wrapper = styled.div`
     display: flex;
@@ -112,6 +113,22 @@ const User = ({ email, id, admin, updateUsers, editUser }) => {
             )}
         </>
     )
+}
+
+User.propTypes = {
+    email: PropTypes.string,
+    id: PropTypes.string,
+    admin: PropTypes.bool,
+    updateUsers: PropTypes.func,
+    editUser: PropTypes.func,
+}
+
+User.defaultProps = {
+    email: '',
+    id: '',
+    admin: false,
+    updateUsers: () => {},
+    editUser: () => {},
 }
 
 export default User

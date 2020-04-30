@@ -2,6 +2,7 @@ import React from 'react'
 import FilterBar from './FilterBar'
 import Product from './Product'
 import { get } from '../../utils/utils'
+import PropTypes from 'prop-types'
 
 export default class ProductsList extends React.Component {
     constructor(props) {
@@ -50,4 +51,26 @@ export default class ProductsList extends React.Component {
             </>
         )
     }
+}
+
+ProductsList.propTypes = {
+    products: PropTypes.array,
+    updateProducts: PropTypes.func,
+    editProduct: PropTypes.func,
+    isAdmin: PropTypes.bool,
+    setCartProducts: PropTypes.func,
+    handleSelect: PropTypes.func,
+    handleSearch: PropTypes.func,
+    handlePriceSelect: PropTypes.func,
+}
+
+ProductsList.defaultProps = {
+    products: [],
+    updateProducts: () => {},
+    editProduct: () => {},
+    isAdmin: false,
+    setCartProducts: () => {},
+    handleSelect: () => {},
+    handleSearch: () => {},
+    handlePriceSelect: () => {},
 }

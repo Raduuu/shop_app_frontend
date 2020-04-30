@@ -5,6 +5,7 @@ import Pagination from '../Pagination/Pagination'
 import Cookie from 'js-cookie'
 import styled from 'styled-components'
 import { get } from '../../utils/utils'
+import PropTypes from 'prop-types'
 
 const StyledList = styled(ProductsList)`
     margin-bottom: 60px;
@@ -98,6 +99,16 @@ class Products extends React.Component {
             </>
         )
     }
+}
+
+Products.propTypes = {
+    isAdmin: PropTypes.bool,
+    setCartProducts: PropTypes.func,
+}
+
+Products.defaultProps = {
+    isAdmin: false,
+    setCartProducts: () => {},
 }
 
 export default Products

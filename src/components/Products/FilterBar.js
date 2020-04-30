@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 const FlexWrapper = styled.div`
     display: flex;
@@ -30,4 +31,18 @@ export default class FilterBar extends React.Component {
             </FlexWrapper>
         )
     }
+}
+
+FilterBar.propTypes = {
+    handleSearch: PropTypes.func,
+    handleSelect: PropTypes.func,
+    handlePriceSelect: PropTypes.func,
+    categories: PropTypes.array,
+}
+
+FilterBar.defaultProps = {
+    handleSearch: () => {},
+    handleSelect: () => {},
+    handlePriceSelect: () => {},
+    categories: [],
 }

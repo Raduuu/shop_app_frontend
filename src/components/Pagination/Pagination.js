@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 const Wrapper = styled.div`
     margin: 30px 0;
@@ -34,6 +35,11 @@ const Pagination = ({ numberOfProducts, onChangePage }) => {
             ))}
         </Wrapper>
     )
+}
+
+Pagination.propTypes = {
+    numberOfProducts: PropTypes.number,
+    onChangePage: PropTypes.func,
 }
 
 export default Pagination

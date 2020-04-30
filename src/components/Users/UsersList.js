@@ -1,5 +1,6 @@
 import React from 'react'
 import User from './User'
+import PropTypes from 'prop-types'
 
 const UsersList = ({ users, updateUsers, editUser }) => {
     return (
@@ -15,6 +16,18 @@ const UsersList = ({ users, updateUsers, editUser }) => {
             ></User>
         ))
     )
+}
+
+UsersList.propTypes = {
+    users: PropTypes.array,
+    updateUsers: PropTypes.func,
+    editUser: PropTypes.func,
+}
+
+UsersList.defaultProps = {
+    users: [],
+    updateUsers: () => {},
+    editUser: () => {},
 }
 
 export default UsersList

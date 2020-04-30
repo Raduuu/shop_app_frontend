@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import Cookie from 'js-cookie'
 import { validateEmail, post } from '../../utils/utils'
+import PropTypes from 'prop-types'
 
 const Wrapper = styled.div`
     width: 100%;
@@ -160,6 +161,14 @@ class Login extends React.Component {
             )
         )
     }
+}
+
+Login.propTypes = {
+    type: PropTypes.string,
+}
+
+Login.defaultProps = {
+    type: '',
 }
 
 export default withRouter(Login)

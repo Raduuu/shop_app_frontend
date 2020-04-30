@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { get, post } from '../../utils/utils'
+import PropTypes from 'prop-types'
 
 export const StyledForm = styled.form`
     display: block;
@@ -111,6 +112,14 @@ class CreateProduct extends React.Component {
             </StyledForm>
         )
     }
+}
+
+CreateProduct.propTypes = {
+    updateProducts: PropTypes.func,
+}
+
+CreateProduct.defaultProps = {
+    updateProducts: () => {},
 }
 
 export default CreateProduct

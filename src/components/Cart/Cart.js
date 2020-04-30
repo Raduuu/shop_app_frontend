@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom'
 import Cookie from 'js-cookie'
 import styled from 'styled-components'
 import { post } from '../../utils/utils'
+import PropTypes from 'prop-types'
 
 const StyledButton = styled.button`
     border-radius: 4px;
@@ -114,6 +115,16 @@ class Cart extends React.Component {
             </Wrapper>
         ) : null
     }
+}
+
+Cart.propTypes = {
+    setCartProducts: PropTypes.func,
+    setCoins: PropTypes.func,
+}
+
+Cart.defaultProps = {
+    setCartProducts: () => {},
+    setCoins: () => {},
 }
 
 export default withRouter(Cart)
