@@ -39,7 +39,6 @@ const onEdit = ({ ev, id, newEmail, isAdmin, setNewEmail, setIsAdmin, setEdit, e
 
     update(`api/user/${id}`, body, (res) => {
         editUser(res.data)
-        // updateUsers(res.data, 'update')
         setNewEmail('')
         setIsAdmin(isAdmin)
         setEdit(false)

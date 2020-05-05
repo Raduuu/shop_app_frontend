@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Cookie from 'js-cookie'
 import { validateEmail, post } from '../../utils/utils'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 const Wrapper = styled.div`
     width: 100%;
@@ -118,7 +119,8 @@ class Login extends React.Component {
         this.setState({ password: e.target.value })
     }
     render() {
-        let isLoggedIn = Cookie.get('token')
+        const { token } = this.props
+        let isLoggedIn = token.length > 0
         return (
             !isLoggedIn && (
                 <Wrapper>
@@ -171,4 +173,8 @@ Login.defaultProps = {
     type: '',
 }
 
-export default withRouter(Login)
+const mapStateToProps = (state) => ({
+    token: state.token,
+})
+
+export default connect(mapStateToProps)(withRouter(Login))

@@ -33,37 +33,34 @@ class Header extends React.Component {
         const isAdmin = Cookie.get('isAdmin')
         const cartProducts = this.getCartProducts()
         return (
-            Cookie.get('token') && (
-                <StyledList>
+            <StyledList>
+                <li>
+                    <Link to="/products">Products</Link>
+                </li>
+                {isAdmin && (
                     <li>
-                        <Link to="/products">Products</Link>
+                        <Link to="/users">Users</Link>
                     </li>
-                    {isAdmin && (
-                        <li>
-                            <Link to="/users">Users</Link>
-                        </li>
-                    )}
-                    <li>
-                        <Link to="/password">Change password</Link>
-                    </li>
-                    <li>
-                        <Link to="/cart">{`Cart(${cartProducts})`}</Link>
-                    </li>
-                    <li>
-                        {/* eslint-disable-next-line */}
-                        <a href="" onClick={this.handleLogout}>
-                            Logout
-                        </a>
-                    </li>
-                </StyledList>
-            )
+                )}
+                <li>
+                    <Link to="/password">Change password</Link>
+                </li>
+                <li>
+                    <Link to="/cart">{`Cart(${cartProducts})`}</Link>
+                </li>
+                <li>
+                    {/* eslint-disable-next-line */}
+                    <a href="" onClick={this.handleLogout}>
+                        Logout
+                    </a>
+                </li>
+            </StyledList>
         )
     }
 }
 
 Header.propTypes = {
-    setLoggedIn: PropTypes.func,
-    cartProducts: PropTypes.array,
+    cartProducts: PropTypes.number,
 }
 
 export default withRouter(Header)
