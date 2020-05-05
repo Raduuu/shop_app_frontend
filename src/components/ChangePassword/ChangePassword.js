@@ -24,7 +24,6 @@ const StyledInput = styled.input`
 class PasswordPage extends React.Component {
     constructor(props) {
         super(props)
-        // potential security risk
         this.state = {
             oldpassword: '',
             newpassword: '',

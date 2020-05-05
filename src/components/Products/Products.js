@@ -6,6 +6,7 @@ import Cookie from 'js-cookie'
 import styled from 'styled-components'
 import { get } from '../../utils/utils'
 import PropTypes from 'prop-types'
+import { debounce } from 'throttle-debounce'
 
 const StyledList = styled(ProductsList)`
     margin-bottom: 60px;
@@ -67,7 +68,7 @@ class Products extends React.Component {
         this.setState({ price: price })
     }
 
-    handleSearch = (text) => {
+    handleSearch = debounce(300, (text) => {
         if (text) {
             get(`api/search?query=${text}`, (res) => {
                 res && this.setState({ products: res.data.products, count: res.data.count })
@@ -77,7 +78,7 @@ class Products extends React.Component {
                 res && this.setState({ products: res.data.data, count: res.data.count })
             })
         }
-    }
+    })
 
     render() {
         const isAdmin = Cookie.get('isAdmin')
