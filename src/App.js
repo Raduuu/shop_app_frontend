@@ -45,17 +45,17 @@ class App extends React.Component {
     }
 
     render() {
-        const { token } = this.props
+        const token = Cookie.get('token')
         const email = Cookie.get('email')
         return (
             <div className="App">
-                {token.length > 0 && (
+                {token && (
                     <p>
                         Welcome, {email} - Coins: {Cookie.get('coins')}{' '}
                     </p>
                 )}
                 <Router>
-                    {token.length > 0 && <Header cartProducts={this.state.cartProducts}></Header>}
+                    {token && <Header cartProducts={this.state.cartProducts}></Header>}
                     <Switch>
                         <Route path="/signup">
                             <Login type="signup" />
