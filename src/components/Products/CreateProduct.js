@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { get, post } from '../../utils/utils'
 import PropTypes from 'prop-types'
+import { createProduct } from '../../redux/actions/products'
+import { connect } from 'react-redux'
 
 export const StyledForm = styled.form`
     display: block;
@@ -40,23 +42,25 @@ class CreateProduct extends React.Component {
     }
 
     handleSubmit = (ev) => {
-        const { updateProducts } = this.props
+        const { updateProducts, createProduct } = this.props
         ev.preventDefault()
         const body = {
             ...this.state,
         }
 
-        post(body, 'api/product', (res) => {
-            updateProducts(res.data)
+        createProduct(body)
 
-            this.setState({
-                name: '',
-                quantity: '',
-                price: '',
-                description: '',
-                category: '',
-            })
-        })
+        // post(body, 'api/product', (res) => {
+        // updateProducts(res.data)
+
+        // this.setState({
+        //     name: '',
+        //     quantity: '',
+        //     price: '',
+        //     description: '',
+        //     category: '',
+        // })
+        // })
     }
 
     render() {
@@ -122,4 +126,8 @@ CreateProduct.defaultProps = {
     updateProducts: () => {},
 }
 
-export default CreateProduct
+const mapDispatchToProps = (dispatch) => ({
+    createProduct: (payload) => dispatch(createProduct(payload)),
+})
+
+export default connect(null, mapDispatchToProps)(CreateProduct)
