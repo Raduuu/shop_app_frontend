@@ -1,7 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { get, post } from '../../utils/utils'
 import PropTypes from 'prop-types'
+import { createProduct } from '../../redux/actions/products'
+import { getCategories } from '../../redux/actions/categories'
+import { selectCategories } from '../../redux/reducers/categories'
+import { connect } from 'react-redux'
 
 export const StyledForm = styled.form`
     display: block;
@@ -30,25 +33,15 @@ class CreateProduct extends React.Component {
     }
 
     componentDidMount() {
-        get('api/category', (res) => {
-            res && this.setState({ categories: res.data.data })
-        })
+        const { getCategories } = this.props
+        getCategories()
+        // get('api/category', (res) => {
+        //     res && this.setState({ categories: res.data.data })
+        // })
     }
 
-    handleSelect = (ev) => {
-        this.setState({ category: ev.target.value })
-    }
-
-    handleSubmit = (ev) => {
-        const { updateProducts } = this.props
-        ev.preventDefault()
-        const body = {
-            ...this.state,
-        }
-
-        post(body, 'api/product', (res) => {
-            updateProducts(res.data)
-
+    componentDidUpdate(prevProps) {
+        if (this.props.success !== prevProps.success) {
             this.setState({
                 name: '',
                 quantity: '',
@@ -56,7 +49,25 @@ class CreateProduct extends React.Component {
                 description: '',
                 category: '',
             })
-        })
+        }
+
+        if (this.props.categories !== prevProps.categories) {
+            this.setState({ categories: this.props.categories })
+        }
+    }
+
+    handleSelect = (ev) => {
+        this.setState({ category: ev.target.value })
+    }
+
+    handleSubmit = (ev) => {
+        const { createProduct } = this.props // need to update products from redux instead of internal state
+        ev.preventDefault()
+        const body = {
+            ...this.state,
+        }
+
+        createProduct(body)
     }
 
     render() {
@@ -122,4 +133,14 @@ CreateProduct.defaultProps = {
     updateProducts: () => {},
 }
 
-export default CreateProduct
+const mapStateToProps = (state) => ({
+    success: state.products.success,
+    categories: selectCategories(state),
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    createProduct: (payload) => dispatch(createProduct(payload)),
+    getCategories: () => dispatch(getCategories()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateProduct)

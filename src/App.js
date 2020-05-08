@@ -8,6 +8,8 @@ import Users from './components/Users/Users'
 import Cart from './components/Cart/Cart'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Cookie from 'js-cookie'
+import { connect } from 'react-redux'
+import { setToken } from './redux/actions/token'
 
 class App extends React.Component {
     constructor(props) {
@@ -21,7 +23,9 @@ class App extends React.Component {
     }
 
     setIsLoggedIn = ({ token, email, isAdmin, coins }) => {
+        const { saveToken } = this.props
         token && Cookie.set('token', token)
+        token && saveToken(token)
         email && Cookie.set('email', email)
         isAdmin && Cookie.set('isAdmin', isAdmin) //used cookie to persist data on refresh
         coins && Cookie.set('coins', coins)
@@ -45,15 +49,13 @@ class App extends React.Component {
         const email = Cookie.get('email')
         return (
             <div className="App">
-                {!!token && (
+                {token && (
                     <p>
                         Welcome, {email} - Coins: {Cookie.get('coins')}{' '}
                     </p>
                 )}
                 <Router>
-                    {!!token && (
-                        <Header setIsLoggedIn={this.setIsLoggedIn} cartProducts={this.state.cartProducts}></Header>
-                    )}
+                    {token && <Header cartProducts={this.state.cartProducts}></Header>}
                     <Switch>
                         <Route path="/signup">
                             <Login type="signup" />
@@ -98,4 +100,12 @@ class App extends React.Component {
     }
 }
 
-export default App
+const mapStateToProps = (state) => ({
+    token: state.token,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    saveToken: (token) => dispatch(setToken(token)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
