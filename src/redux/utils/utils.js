@@ -43,12 +43,13 @@ export const post = (body, url, callback, errCallback) => {
 
 export const get = (url, callback) => {
     const { headers } = createPrerequisites()
-    axios({
+    return axios({
         url: `http://localhost:9000/${url}`,
         method: 'GET',
         headers: headers,
     }).then((res) => {
-        callback(res)
+        callback && callback(res)
+        return res.data
     })
 }
 
