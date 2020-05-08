@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { get } from '../../utils/utils'
 import PropTypes from 'prop-types'
 import { createProduct } from '../../redux/actions/products'
+import { getCategories } from '../../redux/actions/categories'
+import { selectCategories } from '../../redux/reducers/categories'
 import { connect } from 'react-redux'
 
 export const StyledForm = styled.form`
@@ -32,9 +33,11 @@ class CreateProduct extends React.Component {
     }
 
     componentDidMount() {
-        get('api/category', (res) => {
-            res && this.setState({ categories: res.data.data })
-        })
+        const { getCategories } = this.props
+        getCategories()
+        // get('api/category', (res) => {
+        //     res && this.setState({ categories: res.data.data })
+        // })
     }
 
     componentDidUpdate(prevProps) {
@@ -47,6 +50,10 @@ class CreateProduct extends React.Component {
                 category: '',
             })
         }
+
+        if (this.props.categories !== prevProps.categories) {
+            this.setState({ categories: this.props.categories })
+        }
     }
 
     handleSelect = (ev) => {
@@ -54,7 +61,7 @@ class CreateProduct extends React.Component {
     }
 
     handleSubmit = (ev) => {
-        const { updateProducts, createProduct } = this.props
+        const { createProduct } = this.props // need to update products from redux instead of internal state
         ev.preventDefault()
         const body = {
             ...this.state,
@@ -128,10 +135,12 @@ CreateProduct.defaultProps = {
 
 const mapStateToProps = (state) => ({
     success: state.products.success,
+    categories: selectCategories(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
     createProduct: (payload) => dispatch(createProduct(payload)),
+    getCategories: () => dispatch(getCategories()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateProduct)
