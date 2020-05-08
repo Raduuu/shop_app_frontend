@@ -38,16 +38,17 @@ export default class ProductsList extends React.Component {
                     handleSearch={handleSearch}
                     categories={this.state.categories}
                 />
-                {products.map((product) => (
-                    <Product
-                        updateProducts={updateProducts}
-                        editProduct={editProduct}
-                        key={product._id}
-                        product={product}
-                        isAdmin={isAdmin}
-                        setCartProducts={setCartProducts}
-                    />
-                ))}
+                {products &&
+                    products.map((product) => (
+                        <Product
+                            updateProducts={updateProducts}
+                            editProduct={editProduct}
+                            key={product._id}
+                            product={product}
+                            isAdmin={isAdmin}
+                            setCartProducts={setCartProducts}
+                        />
+                    ))}
             </>
         )
     }
