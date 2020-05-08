@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
-import Cookie from 'js-cookie'
 import { validateEmail, post } from '../../utils/utils'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
