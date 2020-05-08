@@ -2,10 +2,12 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import { CREATE_PRODUCT_REQUESTED, CREATE_PRODUCT_SUCCEEDED, CREATE_PRODUCT_FAILED } from '../constants'
 import { post } from '../utils/utils'
 
-const reducer = (state = [], action) => {
+const reducer = (state = {}, action) => {
     switch (action.type) {
         case CREATE_PRODUCT_SUCCEEDED:
-            return [...state, action.payload]
+            return { ...state, [action.payload.id]: action.payload, success: true }
+        case CREATE_PRODUCT_FAILED:
+            return { ...state, success: false }
         default:
             return state
     }

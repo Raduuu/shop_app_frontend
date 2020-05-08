@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { get, post } from '../../utils/utils'
+import { get } from '../../utils/utils'
 import PropTypes from 'prop-types'
 import { createProduct } from '../../redux/actions/products'
 import { connect } from 'react-redux'
@@ -37,6 +37,18 @@ class CreateProduct extends React.Component {
         })
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.success !== prevProps.success) {
+            this.setState({
+                name: '',
+                quantity: '',
+                price: '',
+                description: '',
+                category: '',
+            })
+        }
+    }
+
     handleSelect = (ev) => {
         this.setState({ category: ev.target.value })
     }
@@ -49,18 +61,6 @@ class CreateProduct extends React.Component {
         }
 
         createProduct(body)
-
-        // post(body, 'api/product', (res) => {
-        // updateProducts(res.data)
-
-        // this.setState({
-        //     name: '',
-        //     quantity: '',
-        //     price: '',
-        //     description: '',
-        //     category: '',
-        // })
-        // })
     }
 
     render() {
@@ -126,8 +126,12 @@ CreateProduct.defaultProps = {
     updateProducts: () => {},
 }
 
+const mapStateToProps = (state) => ({
+    success: state.products.success,
+})
+
 const mapDispatchToProps = (dispatch) => ({
     createProduct: (payload) => dispatch(createProduct(payload)),
 })
 
-export default connect(null, mapDispatchToProps)(CreateProduct)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateProduct)
