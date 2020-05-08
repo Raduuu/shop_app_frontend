@@ -7,6 +7,9 @@ import styled from 'styled-components'
 import { get } from '../../utils/utils'
 import PropTypes from 'prop-types'
 import { debounce } from 'throttle-debounce'
+import { getProducts } from '../../redux/actions/products'
+import { selectProducts, selectCount } from '../../redux/reducers/products'
+import { connect } from 'react-redux'
 
 const StyledList = styled(ProductsList)`
     margin-bottom: 60px;
@@ -27,9 +30,11 @@ class Products extends React.Component {
     }
 
     componentDidMount() {
-        get('api/product/', (res) => {
-            res && this.setState({ products: res.data.data, count: res.data.count })
-        })
+        const { getProducts } = this.props
+        getProducts()
+        // get('api/product/', (res) => {
+        //     res && this.setState({ products: res.data.data, count: res.data.count })
+        // })
     }
 
     editProduct = (product) => {
@@ -82,11 +87,12 @@ class Products extends React.Component {
 
     render() {
         const isAdmin = Cookie.get('isAdmin')
+        const { products, count } = this.props
         return (
             <>
                 {isAdmin && <CreateProduct updateProducts={this.updateProducts} />}
                 <StyledList
-                    products={this.state.products}
+                    products={products}
                     editProduct={this.editProduct}
                     updateProducts={this.updateProducts}
                     isAdmin={isAdmin}
@@ -96,7 +102,7 @@ class Products extends React.Component {
                     handlePriceSelect={this.handlePriceSelect}
                 />
 
-                <StyledPagination numberOfProducts={this.state.count} onChangePage={this.onChangePage} />
+                <StyledPagination numberOfProducts={count} onChangePage={this.onChangePage} />
             </>
         )
     }
@@ -112,4 +118,13 @@ Products.defaultProps = {
     setCartProducts: () => {},
 }
 
-export default Products
+const mapStateToProps = (state) => ({
+    products: selectProducts(state),
+    count: selectCount(state),
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    getProducts: () => dispatch(getProducts()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Products)
