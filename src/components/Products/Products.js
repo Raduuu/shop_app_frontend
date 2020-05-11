@@ -32,9 +32,6 @@ class Products extends React.Component {
     componentDidMount() {
         const { getProducts } = this.props
         getProducts()
-        // get('api/product/', (res) => {
-        //     res && this.setState({ products: res.data.data, count: res.data.count })
-        // })
     }
 
     editProduct = (product) => {
@@ -54,9 +51,11 @@ class Products extends React.Component {
     }
 
     onChangePage = (page) => {
-        get(`api/product?page=${page}&category=${this.state.category}`, (res) => {
-            res && this.setState({ products: res.data.data })
-        })
+        // get(`api/product?page=${page}&category=${this.state.category}`, (res) => {
+        //     res && this.setState({ products: res.data.data })
+        // })
+        const { getProducts } = this.props
+        getProducts({ page })
     }
 
     handleSelect = (category) => {
@@ -124,7 +123,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    getProducts: () => dispatch(getProducts()),
+    getProducts: (payload) => dispatch(getProducts(payload)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products)
