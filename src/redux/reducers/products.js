@@ -38,9 +38,19 @@ function* createProduct(action) {
     }
 }
 
-function* getProducts() {
+function* getProducts(action) {
     try {
-        const products = yield call(get, 'api/product/')
+        let url = 'api/product'
+        if (action.payload) {
+            url += '?'
+            for (let parameter in action.payload) {
+                url += `${parameter}=${action.payload.parameter}`
+            }
+        }
+        const products = yield call(
+            get,
+            action.payload && action.payload.page ? `api/product?page=${action.payload.page}` : 'api/product',
+        )
         yield put({ type: GET_PRODUCTS_SUCCEEDED, payload: products })
     } catch {
         yield put({ type: GET_PRODUCTS_FAILED })
