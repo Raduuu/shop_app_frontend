@@ -5,8 +5,9 @@ const createProduct = (payload) => ({
     payload,
 })
 
-const getProducts = () => ({
+const getProducts = (payload) => ({
     type: GET_PRODUCTS_REQUESTED,
+    payload,
 })
 
 export { createProduct, getProducts }
