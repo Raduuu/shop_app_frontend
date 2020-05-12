@@ -6,8 +6,11 @@ import {
     GET_PRODUCTS_REQUESTED,
     GET_PRODUCTS_SUCCEEDED,
     GET_PRODUCTS_FAILED,
+    EDIT_PRODUCT_REQUESTED,
+    EDIT_PRODUCT_SUCCEEDED,
+    EDIT_PRODUCT_FAILED,
 } from '../constants'
-import { post, get } from '../utils/utils'
+import { post, get, update } from '../utils/utils'
 
 const reducer = (state = {}, action) => {
     switch (action.type) {
@@ -18,6 +21,13 @@ const reducer = (state = {}, action) => {
         case GET_PRODUCTS_SUCCEEDED:
             return { ...state, products: action.payload.data, count: action.payload.count }
         case GET_PRODUCTS_FAILED:
+            return state
+        case EDIT_PRODUCT_SUCCEEDED:
+            return {
+                ...state,
+                products: [...state.products, action.payload.data],
+            }
+        case EDIT_PRODUCT_FAILED:
             return state
         default:
             return state
@@ -47,19 +57,27 @@ function* getProducts(action) {
                 url += `${parameter}=${action.payload.parameter}`
             }
         }
-        const products = yield call(
-            get,
-            action.payload && action.payload.page ? `api/product?page=${action.payload.page}` : 'api/product',
-        )
+        const products = yield call(get, url)
         yield put({ type: GET_PRODUCTS_SUCCEEDED, payload: products })
     } catch {
         yield put({ type: GET_PRODUCTS_FAILED })
     }
 }
 
+function* editProduct(action) {
+    try {
+        debugger
+        const editedProduct = yield call(update, `api/product/${action.payload._id}`)
+        yield put({ type: EDIT_PRODUCT_SUCCEEDED, payload: editedProduct })
+    } catch {
+        yield put({ type: EDIT_PRODUCT_FAILED })
+    }
+}
+
 function* saga() {
     yield takeLatest(CREATE_PRODUCT_REQUESTED, createProduct)
     yield takeLatest(GET_PRODUCTS_REQUESTED, getProducts)
+    yield takeLatest(EDIT_PRODUCT_REQUESTED, editProduct)
 }
 
 export { saga, reducer, selectProducts, selectCount }
