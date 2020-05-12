@@ -5,7 +5,9 @@ import styled from 'styled-components'
 import Cookie from 'js-cookie'
 import { StyledForm } from './CreateProduct'
 import { update, remove } from '../../utils/utils'
+import { editProduct } from '../../redux/actions/products'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 const Wrapper = styled.div`
     text-align: left;
@@ -52,21 +54,19 @@ const onEdit = ({
 }) => {
     ev.preventDefault()
     const body = {
-        params: { id: product._id },
+        _id: product._id,
         createdBy: product.createdBy,
         name,
         description,
         quantity,
     }
 
-    update(`api/product/${product._id}`, body, (res) => {
-        editProduct(res.data)
-        setName('')
-        setDescription('')
-        setQuantity(0)
-        setPrice(0)
-        setEdit(false)
-    })
+    editProduct(body)
+    setName('')
+    setDescription('')
+    setQuantity(0)
+    setPrice(0)
+    setEdit(false)
 }
 
 const onDelete = (product, updateProducts) => {
@@ -202,4 +202,8 @@ Product.defaultProps = {
     setCartProducts: () => {},
 }
 
-export default Product
+const mapDispatchToProps = (dispatch) => ({
+    editProduct: (body) => dispatch(editProduct(body)),
+})
+
+export default connect(null, mapDispatchToProps)(Product)
