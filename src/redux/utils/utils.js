@@ -56,8 +56,10 @@ export const get = (url, callback) => {
 export const update = (url, body, callback) => {
     const { headers } = createPrerequisites()
 
-    axios.put(`http://localhost:9000/${url}`, body, { headers: headers }).then((res) => {
-        callback(res)
+    return axios.put(`http://localhost:9000/${url}`, body, { headers: headers }).then((res) => {
+        callback && callback(res)
+        debugger
+        return res.data // maybe I don't need return axios
     })
 }
 
