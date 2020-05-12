@@ -42,7 +42,6 @@ export default class ProductsList extends React.Component {
                     products.map((product) => (
                         <Product
                             updateProducts={updateProducts}
-                            editProduct={editProduct}
                             key={product._id}
                             product={product}
                             isAdmin={isAdmin}
