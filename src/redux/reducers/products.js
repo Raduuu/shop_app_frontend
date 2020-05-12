@@ -23,10 +23,10 @@ const reducer = (state = {}, action) => {
         case GET_PRODUCTS_FAILED:
             return state
         case EDIT_PRODUCT_SUCCEEDED:
-            return {
-                ...state,
-                products: [...state.products, action.payload.data],
-            }
+            const products = [...state.products]
+            const index = products.findIndex((prod) => prod._id === action.payload.data._id)
+            products[index] = action.payload.data
+            return { ...state, products }
         case EDIT_PRODUCT_FAILED:
             return state
         default:
@@ -66,8 +66,7 @@ function* getProducts(action) {
 
 function* editProduct(action) {
     try {
-        debugger
-        const editedProduct = yield call(update, `api/product/${action.payload._id}`)
+        const editedProduct = yield call(update, `api/product/${action.payload._id}`, action.payload)
         yield put({ type: EDIT_PRODUCT_SUCCEEDED, payload: editedProduct })
     } catch {
         yield put({ type: EDIT_PRODUCT_FAILED })
