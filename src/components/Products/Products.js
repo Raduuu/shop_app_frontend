@@ -51,9 +51,6 @@ class Products extends React.Component {
     }
 
     onChangePage = (page) => {
-        // get(`api/product?page=${page}&category=${this.state.category}`, (res) => {
-        //     res && this.setState({ products: res.data.data })
-        // })
         const { getProducts } = this.props
         getProducts({ page })
     }

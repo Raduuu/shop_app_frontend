@@ -35,9 +35,6 @@ class CreateProduct extends React.Component {
     componentDidMount() {
         const { getCategories } = this.props
         getCategories()
-        // get('api/category', (res) => {
-        //     res && this.setState({ categories: res.data.data })
-        // })
     }
 
     componentDidUpdate(prevProps) {
