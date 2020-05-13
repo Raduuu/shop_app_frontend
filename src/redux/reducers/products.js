@@ -82,7 +82,7 @@ function* editProduct(action) {
 
 function* searchProducts(action) {
     try {
-        const url = `api/search?query=${action.payload}`
+        const url = `api/product?search=${action.payload}`
         const results = yield call(get, url)
         yield put({ type: SEARCH_PRODUCTS_SUCCEEDED, payload: results })
     } catch {
