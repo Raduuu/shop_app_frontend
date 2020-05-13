@@ -4,8 +4,9 @@ import { faEdit, faTrash, faCartPlus } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
 import Cookie from 'js-cookie'
 import { StyledForm } from './CreateProduct'
-import { update, remove } from '../../utils/utils'
+import { remove } from '../../utils/utils'
 import { editProduct } from '../../redux/actions/products'
+import { selectCategories } from '../../redux/reducers/categories'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -45,6 +46,8 @@ const onEdit = ({
     name,
     description,
     quantity,
+    price,
+    category,
     setName,
     setDescription,
     setEdit,
@@ -58,14 +61,16 @@ const onEdit = ({
         createdBy: product.createdBy,
         name,
         description,
+        price,
+        category,
         quantity,
     }
 
     editProduct(body)
-    setName('')
-    setDescription('')
-    setQuantity(0)
-    setPrice(0)
+    setName(name)
+    setDescription(description)
+    setQuantity(quantity)
+    setPrice(price)
     setEdit(false)
 }
 
@@ -94,11 +99,12 @@ const addToCart = (product, setCartProducts) => {
     Cookie.set('cart', cart)
 }
 
-const Product = ({ product, updateProducts, editProduct, isAdmin, setCartProducts }) => {
-    const [name, setName] = useState('')
-    const [quantity, setQuantity] = useState(0)
-    const [price, setPrice] = useState(0)
-    const [description, setDescription] = useState('')
+const Product = ({ product, categories, updateProducts, editProduct, isAdmin, setCartProducts }) => {
+    const [name, setName] = useState(product.name)
+    const [quantity, setQuantity] = useState(product.quantity)
+    const [price, setPrice] = useState(product.price)
+    const [category, setCategory] = useState(product.category)
+    const [description, setDescription] = useState(product.description)
     const [edit, setEdit] = useState(false)
     const iconColor = '#FF715B'
     return (
@@ -111,7 +117,11 @@ const Product = ({ product, updateProducts, editProduct, isAdmin, setCartProduct
             <IconsWrapper>
                 {isAdmin && (
                     <div>
-                        <StyledIcon onClick={() => setEdit(!edit)}>
+                        <StyledIcon
+                            onClick={() => {
+                                setEdit(!edit)
+                            }}
+                        >
                             <FontAwesomeIcon icon={faEdit} color={iconColor} />
                         </StyledIcon>
                         <StyledIcon onClick={() => onDelete(product, updateProducts)}>
@@ -151,6 +161,11 @@ const Product = ({ product, updateProducts, editProduct, isAdmin, setCartProduct
                         onChange={(ev) => setPrice(ev.target.value)}
                         value={price}
                     />
+                    <select onChange={(ev) => setCategory(ev.target.value)} value={category}>
+                        <option>Pick a category...</option>
+                        {categories &&
+                            categories.map((category, index) => <option key={index}>{category.name}</option>)}
+                    </select>
                     <textarea
                         name="description"
                         width="300"
@@ -169,6 +184,8 @@ const Product = ({ product, updateProducts, editProduct, isAdmin, setCartProduct
                                 name,
                                 description,
                                 quantity,
+                                price,
+                                category,
                                 editProduct,
                                 setName,
                                 setEdit,
@@ -202,8 +219,12 @@ Product.defaultProps = {
     setCartProducts: () => {},
 }
 
+const mapStateToProps = (state) => ({
+    categories: selectCategories(state),
+})
+
 const mapDispatchToProps = (dispatch) => ({
     editProduct: (body) => dispatch(editProduct(body)),
 })
 
-export default connect(null, mapDispatchToProps)(Product)
+export default connect(mapStateToProps, mapDispatchToProps)(Product)
