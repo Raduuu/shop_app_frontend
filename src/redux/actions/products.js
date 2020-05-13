@@ -1,4 +1,9 @@
-import { CREATE_PRODUCT_REQUESTED, GET_PRODUCTS_REQUESTED, EDIT_PRODUCT_REQUESTED } from '../constants'
+import {
+    CREATE_PRODUCT_REQUESTED,
+    GET_PRODUCTS_REQUESTED,
+    EDIT_PRODUCT_REQUESTED,
+    SEARCH_PRODUCTS_REQUESTED,
+} from '../constants'
 
 const createProduct = (payload) => ({
     type: CREATE_PRODUCT_REQUESTED,
@@ -15,4 +20,9 @@ const editProduct = (payload) => ({
     payload,
 })
 
-export { createProduct, getProducts, editProduct }
+const searchProducts = (payload) => ({
+    type: SEARCH_PRODUCTS_REQUESTED,
+    payload,
+})
+
+export { createProduct, getProducts, editProduct, searchProducts }

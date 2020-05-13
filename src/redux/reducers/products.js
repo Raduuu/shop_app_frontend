@@ -9,6 +9,9 @@ import {
     EDIT_PRODUCT_REQUESTED,
     EDIT_PRODUCT_SUCCEEDED,
     EDIT_PRODUCT_FAILED,
+    SEARCH_PRODUCTS_REQUESTED,
+    SEARCH_PRODUCTS_SUCCEEDED,
+    SEARCH_PRODUCTS_FAILED,
 } from '../constants'
 import { post, get, update } from '../utils/utils'
 
@@ -28,6 +31,10 @@ const reducer = (state = {}, action) => {
             products[index] = action.payload.data
             return { ...state, products }
         case EDIT_PRODUCT_FAILED:
+            return state
+        case SEARCH_PRODUCTS_SUCCEEDED:
+            return { ...state, products: action.payload.products, count: action.payload.count }
+        case SEARCH_PRODUCTS_FAILED:
             return state
         default:
             return state
@@ -54,7 +61,7 @@ function* getProducts(action) {
         if (action.payload) {
             url += '?'
             for (let parameter in action.payload) {
-                url += `${parameter}=${action.payload.parameter}`
+                url += `${parameter}=${action.payload[parameter]}`
             }
         }
         const products = yield call(get, url)
@@ -73,10 +80,21 @@ function* editProduct(action) {
     }
 }
 
+function* searchProducts(action) {
+    try {
+        const url = `api/search?query=${action.payload}`
+        const results = yield call(get, url)
+        yield put({ type: SEARCH_PRODUCTS_SUCCEEDED, payload: results })
+    } catch {
+        yield put({ type: SEARCH_PRODUCTS_FAILED })
+    }
+}
+
 function* saga() {
     yield takeLatest(CREATE_PRODUCT_REQUESTED, createProduct)
     yield takeLatest(GET_PRODUCTS_REQUESTED, getProducts)
     yield takeLatest(EDIT_PRODUCT_REQUESTED, editProduct)
+    yield takeLatest(SEARCH_PRODUCTS_REQUESTED, searchProducts)
 }
 
 export { saga, reducer, selectProducts, selectCount }
