@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { get } from '../../utils/utils'
 import PropTypes from 'prop-types'
 import { debounce } from 'throttle-debounce'
-import { getProducts } from '../../redux/actions/products'
+import { getProducts, searchProducts } from '../../redux/actions/products'
 import { selectProducts, selectCount } from '../../redux/reducers/products'
 import { connect } from 'react-redux'
 
@@ -56,28 +56,23 @@ class Products extends React.Component {
     }
 
     handleSelect = (category) => {
-        get(`api/product?category=${category}`, (res) => {
-            res && this.setState({ products: res.data.data, count: res.data.count })
-        })
+        const { getProducts } = this.props
+        getProducts({ category })
         this.setState({ category: category })
     }
 
     handlePriceSelect = (price) => {
-        get(`api/product?price=${price}`, (res) => {
-            res && this.setState({ products: res.data.data, count: res.data.count })
-        })
+        const { getProducts } = this.props
+        getProducts({ price })
         this.setState({ price: price })
     }
 
     handleSearch = debounce(300, (text) => {
+        const { searchProducts, getProducts } = this.props
         if (text) {
-            get(`api/search?query=${text}`, (res) => {
-                res && this.setState({ products: res.data.products, count: res.data.count })
-            })
+            searchProducts(text)
         } else {
-            get('api/product/', (res) => {
-                res && this.setState({ products: res.data.data, count: res.data.count })
-            })
+            getProducts()
         }
     })
 
@@ -121,6 +116,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getProducts: (payload) => dispatch(getProducts(payload)),
+    searchProducts: (payload) => dispatch(searchProducts(payload)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products)
