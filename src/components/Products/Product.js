@@ -7,6 +7,7 @@ import { StyledForm } from './CreateProduct'
 import { remove } from '../../utils/utils'
 import { editProduct } from '../../redux/actions/products'
 import { selectCategories } from '../../redux/reducers/categories'
+import { openModal } from '../../redux/actions/modals'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -80,7 +81,7 @@ const onDelete = (product, updateProducts) => {
     })
 }
 
-const addToCart = (product, setCartProducts) => {
+const addToCart = (product, setCartProducts, openModal) => {
     let cart = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')) : []
     let found = false
     let total = 1
@@ -97,9 +98,10 @@ const addToCart = (product, setCartProducts) => {
     !found && cart.push({ _id: product._id, name: product.name, price: product.price, quantity: 1 })
 
     Cookie.set('cart', cart)
+    openModal()
 }
 
-const Product = ({ product, categories, updateProducts, editProduct, isAdmin, setCartProducts }) => {
+const Product = ({ product, categories, updateProducts, editProduct, isAdmin, setCartProducts, openModal }) => {
     const [name, setName] = useState(product.name)
     const [quantity, setQuantity] = useState(product.quantity)
     const [price, setPrice] = useState(product.price)
@@ -130,7 +132,7 @@ const Product = ({ product, categories, updateProducts, editProduct, isAdmin, se
                     </div>
                 )}
             </IconsWrapper>
-            <StyledButton onClick={() => addToCart(product, setCartProducts)}>
+            <StyledButton onClick={() => addToCart(product, setCartProducts, openModal)}>
                 <span>Add to cart</span>
                 <span>
                     <StyledIcon>
@@ -225,6 +227,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     editProduct: (body) => dispatch(editProduct(body)),
+    openModal: () => dispatch(openModal()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product)
