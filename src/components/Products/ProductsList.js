@@ -22,7 +22,6 @@ export default class ProductsList extends React.Component {
         const {
             products,
             updateProducts,
-            editProduct,
             isAdmin,
             setCartProducts,
             handleSelect,

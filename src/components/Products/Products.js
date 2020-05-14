@@ -4,7 +4,6 @@ import ProductsList from './ProductsList'
 import Pagination from '../Pagination/Pagination'
 import Cookie from 'js-cookie'
 import styled from 'styled-components'
-import { get } from '../../utils/utils'
 import PropTypes from 'prop-types'
 import { debounce } from 'throttle-debounce'
 import { getProducts, searchProducts } from '../../redux/actions/products'
@@ -92,7 +91,6 @@ class Products extends React.Component {
                     handleSearch={this.handleSearch}
                     handlePriceSelect={this.handlePriceSelect}
                 />
-
                 <StyledPagination numberOfProducts={count} onChangePage={this.onChangePage} />
             </>
         )
