@@ -6,6 +6,7 @@ import Header from './components/Header/Header'
 import ChangePassword from './components/ChangePassword/ChangePassword'
 import Users from './components/Users/Users'
 import Cart from './components/Cart/Cart'
+import CartModal from './components/CartModal/CartModal'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Cookie from 'js-cookie'
 import { connect } from 'react-redux'
@@ -47,8 +48,10 @@ class App extends React.Component {
     render() {
         const token = Cookie.get('token')
         const email = Cookie.get('email')
+        const { cartModal } = this.props
         return (
             <div className="App">
+                {cartModal && <CartModal />}
                 {token && (
                     <p>
                         Welcome, {email} - Coins: {Cookie.get('coins')}{' '}
@@ -102,6 +105,7 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => ({
     token: state.token,
+    cartModal: state.modals.cartModal,
 })
 
 const mapDispatchToProps = (dispatch) => ({
