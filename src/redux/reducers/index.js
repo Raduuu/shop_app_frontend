@@ -3,12 +3,14 @@ import createSagaMiddleware from 'redux-saga'
 import token from './token'
 import { reducer as products } from './products'
 import { reducer as categories } from './categories'
+import { reducer as modals } from './modals'
 import sagas from './sagas'
 
 export const rootReducer = combineReducers({
     token,
     products,
     categories,
+    modals,
 })
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
