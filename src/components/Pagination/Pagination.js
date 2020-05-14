@@ -17,11 +17,10 @@ const Pagination = ({ numberOfProducts, onChangePage }) => {
         <Wrapper>
             {numberOfPages > 0 && <h4>{`page ${pageNumber} of ${numberOfPages}`}</h4>}
             {arrOfPages.map((page) => (
-                <>
+                <React.Fragment key={page}>
                     {/* eslint-disable-next-line */}
                     <a
                         href="#"
-                        key={page}
                         onClick={(ev) => {
                             ev.preventDefault()
                             onChangePage(page)
@@ -31,7 +30,7 @@ const Pagination = ({ numberOfProducts, onChangePage }) => {
                         {page}
                     </a>
                     <span> </span>
-                </>
+                </React.Fragment>
             ))}
         </Wrapper>
     )
