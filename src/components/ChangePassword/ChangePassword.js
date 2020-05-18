@@ -1,8 +1,11 @@
 import React from 'react'
 import Cookie from 'js-cookie'
 import { post } from '../../utils/utils'
+import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { changePassword } from '../../redux/actions/password'
+import { connect } from 'react-redux'
 
 const StyledError = styled.p`
     color: red;
@@ -25,64 +28,55 @@ class PasswordPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            oldpassword: '',
             newpassword: '',
             newpassword2: '',
         }
     }
 
-    handleSubmit = (ev) => {
+    handleSubmit = async (ev) => {
         ev.preventDefault()
+        const { changePassword, email } = this.props
+        const {
+            match: { params },
+        } = this.props
+
         if (this.state.newpassword !== this.state.newpassword2) {
             this.setState({ error: "Passwords don't match" })
         } else {
             const body = {
-                email: Cookie.get('email'),
-                oldpassword: this.state.oldpassword,
+                params,
                 newpassword: this.state.newpassword,
             }
 
-            post(
-                body,
-                'api/changepassword',
-                (res) => {
-                    this.setState({ error: undefined, success: res.data.message })
-                },
-                (err) => {
-                    this.setState({ success: undefined, error: err.response.data.message })
-                    console.error(err)
-                },
-            )
+            await changePassword(body)
+            this.props.history.push('/login')
         }
     }
 
     render() {
         return (
-            <form noValidate>
-                {this.state.error && <StyledError>{this.state.error}</StyledError>}
-                {this.state.success && <Success>{this.state.success}</Success>}
-                <StyledInput
-                    name="oldpassword"
-                    type="password"
-                    placeholder="Old Password"
-                    onChange={(ev) => this.setState({ oldpassword: ev.target.value })}
-                />
-                <StyledInput
-                    name="newpassword"
-                    type="password"
-                    placeholder="New Password"
-                    onChange={(ev) => this.setState({ newpassword: ev.target.value })}
-                />
-                <StyledInput
-                    name="newpassword2"
-                    type="password"
-                    placeholder="Again your new password"
-                    onChange={(ev) => this.setState({ newpassword2: ev.target.value })}
-                />
-                <button type="submit" onClick={(ev) => this.handleSubmit(ev)}>
-                    Submit
-                </button>
-            </form>
+            <>
+                <h2>Change Password</h2>
+                <form noValidate>
+                    {this.state.error && <StyledError>{this.state.error}</StyledError>}
+                    {this.state.success && <Success>{this.state.success}</Success>}
+                    <StyledInput
+                        name="newpassword"
+                        type="password"
+                        placeholder="New Password"
+                        onChange={(ev) => this.setState({ newpassword: ev.target.value })}
+                    />
+                    <StyledInput
+                        name="newpassword2"
+                        type="password"
+                        placeholder="Again your new password"
+                        onChange={(ev) => this.setState({ newpassword2: ev.target.value })}
+                    />
+                    <button type="submit" onClick={(ev) => this.handleSubmit(ev)}>
+                        Submit
+                    </button>
+                </form>
+            </>
         )
     }
 }
@@ -95,4 +89,8 @@ PasswordPage.defaultProps = {
     email: '',
 }
 
-export default PasswordPage
+const mapDispatchToProps = (dispatch) => ({
+    changePassword: (body) => dispatch(changePassword(body)),
+})
+
+export default withRouter(connect(null, mapDispatchToProps)(PasswordPage))
