@@ -152,7 +152,10 @@ class Login extends React.Component {
                         {this.props.type !== 'login' ? (
                             <StyledLink to="/login">Sign in</StyledLink>
                         ) : (
-                            <StyledLink to="/signup">Sign up</StyledLink>
+                            <>
+                                <StyledLink to="/forgotpassword">Forgot Password</StyledLink>
+                                <StyledLink to="/signup">Sign up</StyledLink>
+                            </>
                         )}
                         <StyledButton type="submit" onClick={(ev) => this.onSubmit(ev)}>
                             {this.props.type === 'login' ? 'Sign in' : 'Sign up'}
