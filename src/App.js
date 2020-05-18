@@ -7,6 +7,7 @@ import ChangePassword from './components/ChangePassword/ChangePassword'
 import Users from './components/Users/Users'
 import Cart from './components/Cart/Cart'
 import CartModal from './components/CartModal/CartModal'
+import ForgotPassword from './components/ForgotPassword/ForgotPassword'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Cookie from 'js-cookie'
 import { connect } from 'react-redux'
@@ -66,12 +67,13 @@ class App extends React.Component {
                         <Route path="/login">
                             <Login type="login" isLoggedIn={!!token} setIsLoggedIn={this.setIsLoggedIn} />
                         </Route>
+                        <Route path="/forgotpassword">
+                            <ForgotPassword></ForgotPassword>
+                        </Route>
                         <Route path="/products">
                             <Products isAdmin={this.state.isAdmin} setCartProducts={this.setCartProducts}></Products>
                         </Route>
-                        <Route path="/password">
-                            <ChangePassword email={this.state.email}></ChangePassword>
-                        </Route>
+                        <Route path="/password/:id/:token" component={ChangePassword}></Route>
                         <Route path="/users">
                             <Users></Users>
                         </Route>
