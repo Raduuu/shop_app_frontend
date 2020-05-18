@@ -43,9 +43,6 @@ class Header extends React.Component {
                     </li>
                 )}
                 <li>
-                    <Link to="/password">Change password</Link>
-                </li>
-                <li>
                     <Link to="/cart">{`Cart(${cartProducts})`}</Link>
                 </li>
                 <li>
