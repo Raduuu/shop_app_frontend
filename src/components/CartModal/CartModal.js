@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { closeModal } from '../../redux/actions/modals'
@@ -28,38 +28,38 @@ const Wrapper = styled.div`
     }
 `
 
-class CartModal extends React.Component {
-    componentDidMount() {
-        document.addEventListener('mousedown', this.handleClickOutside)
-    }
+// const useWrapperRef = (node) => {
+//     // this.wrapperRef = node
+//     const wrapperRef = useRef(node)
+//     return wrapperRef
+// }
 
-    componentWillUnmount() {
-        document.removeEventListener('mousedown', this.handleClickOutside)
+const handleClickOutside = (event, closeModal, wrapperRef) => {
+    if (wrapperRef && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        closeModal()
     }
+}
 
-    setWrapperRef = (node) => {
-        this.wrapperRef = node
-    }
-
-    handleClickOutside = (event) => {
-        const { closeModal } = this.props
-        if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-            closeModal()
+const CartModal = ({ closeModal }) => {
+    useEffect(() => {
+        document.addEventListener('mousedown', (ev) => handleClickOutside(ev, closeModal, wrapperRef))
+        return () => {
+            document.removeEventListener('mousedown', (ev) => handleClickOutside(ev, closeModal, wrapperRef))
         }
-    }
+    }, [closeModal])
 
-    render() {
-        return (
-            <FullPageWrapper>
-                <div ref={this.setWrapperRef}>
-                    <Wrapper>
-                        <p>Item added to cart</p>
-                        <a href="/cart">See cart</a>
-                    </Wrapper>
-                </div>
-            </FullPageWrapper>
-        )
-    }
+    const wrapperRef = useRef(null)
+
+    return (
+        <FullPageWrapper>
+            <div ref={wrapperRef}>
+                <Wrapper>
+                    <p>Item added to cart</p>
+                    <a href="/cart">See cart</a>
+                </Wrapper>
+            </div>
+        </FullPageWrapper>
+    )
 }
 
 const mapDispatchToProps = (dispatch) => ({

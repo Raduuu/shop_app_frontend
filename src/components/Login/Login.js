@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import { validateEmail, post } from '../../utils/utils'
@@ -52,119 +52,110 @@ const StyledButton = styled.button`
     border: none;
 `
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            email: '',
-            password: '',
-            apiResponse: null,
-        }
+const onSubmit = ({ ev, email, type, email2, password, setEmailError, setApiResponse, setIsLoggedIn, push }) => {
+    ev.preventDefault()
+    const body = {
+        email,
+        password,
     }
 
-    componentDidMount() {
-        this.setState({
-            email: '',
-            password: '',
-            apiResponse: null,
-        })
-    }
-
-    onSubmit = (ev) => {
-        ev.preventDefault()
-        const email = this.state.email
-        const password = this.state.password
-        const body = {
-            email,
-            password,
-        }
-        const { type } = this.props
-
-        if (!validateEmail(email)) {
-            this.setState({ emailError: 'Email is not valid' })
+    if (!validateEmail(email)) {
+        setEmailError('Email is not valid')
+    } else {
+        if (type !== 'login' && email !== email2) {
+            setEmailError("Emails don't match")
         } else {
-            if (this.props.type !== 'login' && email !== this.state.email2) {
-                this.setState({ emailError: "Emails don't match" })
-            } else {
-                this.setState({ emailError: undefined })
-                post(
-                    body,
-                    `${type === 'login' ? 'signin' : 'signup'}`,
-                    (res) => {
-                        let apiResponse
-                        apiResponse = res !== '' && res !== undefined && res.data
-                        this.setState({ apiResponse: apiResponse })
-                        if (apiResponse.token && this.props.type === 'login') {
-                            let { token, email, admin, coins } = apiResponse
-                            this.props.setIsLoggedIn({ token, email, isAdmin: admin, coins })
-                            this.props.history.push('/products')
-                        } else if (this.props.type === 'signup') {
-                            this.props.history.push('/login')
-                        }
-                    },
-                    (err) => {
-                        err.response && err.response.data && this.setState({ apiResponse: err.response.data })
-                    },
-                )
-            }
+            setEmailError(undefined)
+            post(
+                body,
+                `${type === 'login' ? 'signin' : 'signup'}`,
+                (res) => {
+                    let apiResponse
+                    apiResponse = res !== '' && res !== undefined && res.data
+                    setApiResponse(apiResponse)
+                    if (apiResponse.token && type === 'login') {
+                        let { token, email, admin, coins } = apiResponse
+                        setIsLoggedIn({ token, email, isAdmin: admin, coins })
+                        push('/products')
+                    } else if (this.props.type === 'signup') {
+                        push('/login')
+                    }
+                },
+                (err) => {
+                    err.response && err.response.data && setApiResponse(err.response.data)
+                },
+            )
         }
     }
+}
 
-    handleEmailChange = (e) => {
-        this.setState({ email: e.target.value })
-    }
+const Login = ({ token, type, setIsLoggedIn, history }) => {
+    const [email, setEmail] = useState('')
+    const [email2, setEmail2] = useState('')
+    const [emailError, setEmailError] = useState('')
+    const [password, setPassword] = useState('')
+    const [apiResponse, setApiResponse] = useState(null)
+    let isLoggedIn = token.length > 0
 
-    handlePasswordChange = (e) => {
-        this.setState({ password: e.target.value })
-    }
-    render() {
-        const { token } = this.props
-        let isLoggedIn = token.length > 0
-        return (
-            !isLoggedIn && (
-                <Wrapper>
-                    <StyledTitle>{this.props.type === 'login' ? 'Sign in' : 'Sign up'}</StyledTitle>
-                    <form noValidate>
-                        {this.state.apiResponse && (
-                            <StyledError className="error">{this.state.apiResponse.message}</StyledError>
-                        )}
-                        {this.state.emailError && <StyledError>{this.state.emailError}</StyledError>}
+    const { push } = history
+
+    return (
+        !isLoggedIn && (
+            <Wrapper>
+                <StyledTitle>{type === 'login' ? 'Sign in' : 'Sign up'}</StyledTitle>
+                <form noValidate>
+                    {apiResponse && <StyledError className="error">{apiResponse.message}</StyledError>}
+                    {emailError && <StyledError>{emailError}</StyledError>}
+                    <StyledInput
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        onChange={(e) => setEmail(e.target.value)}
+                    ></StyledInput>
+                    {type !== 'login' && (
                         <StyledInput
                             type="email"
-                            name="email"
-                            placeholder="Email"
-                            onChange={(e) => this.handleEmailChange(e)}
+                            name="email2"
+                            placeholder="Confirm email"
+                            onChange={(e) => setEmail2(e.target.value)}
                         ></StyledInput>
-                        {this.props.type !== 'login' && (
-                            <StyledInput
-                                type="email"
-                                name="email2"
-                                placeholder="Confirm email"
-                                onChange={(e) => this.setState({ email2: e.target.value })}
-                            ></StyledInput>
-                        )}
+                    )}
 
-                        <StyledInput
-                            type="password"
-                            placeholder="Password"
-                            onChange={(e) => this.handlePasswordChange(e)}
-                        ></StyledInput>
-                        {this.props.type !== 'login' ? (
-                            <StyledLink to="/login">Sign in</StyledLink>
-                        ) : (
-                            <>
-                                <StyledLink to="/forgotpassword">Forgot Password</StyledLink>
-                                <StyledLink to="/signup">Sign up</StyledLink>
-                            </>
-                        )}
-                        <StyledButton type="submit" onClick={(ev) => this.onSubmit(ev)}>
-                            {this.props.type === 'login' ? 'Sign in' : 'Sign up'}
-                        </StyledButton>
-                    </form>
-                </Wrapper>
-            )
+                    <StyledInput
+                        type="password"
+                        placeholder="Password"
+                        onChange={(e) => setPassword(e.target.value)}
+                    ></StyledInput>
+                    {type !== 'login' ? (
+                        <StyledLink to="/login">Sign in</StyledLink>
+                    ) : (
+                        <>
+                            <StyledLink to="/forgotpassword">Forgot Password</StyledLink>
+                            <StyledLink to="/signup">Sign up</StyledLink>
+                        </>
+                    )}
+                    <StyledButton
+                        type="submit"
+                        onClick={(ev) =>
+                            onSubmit({
+                                ev,
+                                email,
+                                type,
+                                email2,
+                                password,
+                                setEmailError,
+                                setApiResponse,
+                                setIsLoggedIn,
+                                push,
+                            })
+                        }
+                    >
+                        {type === 'login' ? 'Sign in' : 'Sign up'}
+                    </StyledButton>
+                </form>
+            </Wrapper>
         )
-    }
+    )
 }
 
 Login.propTypes = {

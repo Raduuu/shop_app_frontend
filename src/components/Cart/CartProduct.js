@@ -16,7 +16,7 @@ const DeleteButton = styled.button`
     margin-left: 10px;
 `
 
-const CartProduct = ({ name, id, quantity, changeCartProducts, removeCartProduct }) => {
+const CartProduct = ({ name, id, quantity, changeCartProducts, removeCartProduct, setCartProds, setCartProducts }) => {
     return (
         <>
             <Wrapper>
@@ -25,9 +25,14 @@ const CartProduct = ({ name, id, quantity, changeCartProducts, removeCartProduct
                 <input
                     type="number"
                     defaultValue={quantity}
-                    onChange={(ev) => changeCartProducts(id, ev.target.value)}
+                    onChange={(ev) => {
+                        const { value } = ev.target
+                        changeCartProducts({ id, value, setCartProds })
+                    }}
                 />
-                <DeleteButton onClick={() => removeCartProduct(id)}>Remove product</DeleteButton>
+                <DeleteButton onClick={() => removeCartProduct({ id, setCartProducts, setCartProds })}>
+                    Remove product
+                </DeleteButton>
             </Wrapper>
         </>
     )
