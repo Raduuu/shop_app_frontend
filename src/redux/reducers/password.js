@@ -7,7 +7,7 @@ import {
     CHANGE_PASSWORD_REQUESTED,
 } from '../constants'
 import { call, put, takeEvery } from 'redux-saga/effects'
-import { post, get, update } from '../utils/utils'
+import { post } from '../utils/utils'
 
 const reducer = (state, action) => {
     switch (action.type) {
