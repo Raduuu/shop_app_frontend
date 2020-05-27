@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { createProduct } from '../../redux/actions/products'
@@ -20,106 +20,77 @@ export const StyledForm = styled.form`
     }
 `
 
-class CreateProduct extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            name: '',
-            quantity: '',
-            description: '',
-            categories: [],
-            category: '',
-        }
-    }
+const handleSelect = (ev, setCategory) => {
+    setCategory(ev.target.value)
+}
 
-    componentDidMount() {
-        const { getCategories } = this.props
-        getCategories()
-    }
+const handleSubmit = (ev, createProduct, body) => {
+    ev.preventDefault()
+    createProduct(body)
+}
 
-    componentDidUpdate(prevProps) {
-        if (this.props.success !== prevProps.success) {
-            this.setState({
-                name: '',
-                quantity: '',
-                price: '',
-                description: '',
-                category: '',
-            })
-        }
+const CreateProduct = ({ getCategories, categories, success, createProduct }) => {
+    const [name, setName] = useState('')
+    const [quantity, setQuantity] = useState('')
+    const [description, setDescription] = useState('')
+    const [price, setPrice] = useState('')
+    const [categoriesState, setCategories] = useState([])
+    const [category, setCategory] = useState('')
 
-        if (this.props.categories !== prevProps.categories) {
-            this.setState({ categories: this.props.categories })
-        }
-    }
+    useEffect(() => {
+        !categoriesState && getCategories()
+        setName('')
+        setQuantity('')
+        setDescription('')
+        setCategory('')
+        setCategories(categories)
+    }, [success, categories, getCategories, categoriesState])
 
-    handleSelect = (ev) => {
-        this.setState({ category: ev.target.value })
-    }
-
-    handleSubmit = (ev) => {
-        const { createProduct } = this.props // need to update products from redux instead of internal state
-        ev.preventDefault()
-        const body = {
-            ...this.state,
-        }
-
-        createProduct(body)
-    }
-
-    render() {
-        return (
-            <StyledForm noValidate>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Product name"
-                    onChange={(ev) => this.setState({ name: ev.target.value })}
-                    value={this.state.name}
-                />
-                <input
-                    type="number"
-                    name="quantity"
-                    placeholder="Product quantity"
-                    onChange={(ev) => this.setState({ quantity: ev.target.value })}
-                    value={this.state.quantity}
-                />
-                <input
-                    type="number"
-                    name="price"
-                    placeholder="Price"
-                    onChange={(ev) => this.setState({ price: ev.target.value })}
-                    value={this.state.price}
-                />
-                <textarea
-                    name="description"
-                    width="300"
-                    height="100"
-                    onChange={(ev) => this.setState({ description: ev.target.value })}
-                    placeholder="Product description"
-                    value={this.state.description}
-                ></textarea>
-                <select onChange={(ev) => this.handleSelect(ev)} value={this.state.category}>
-                    <option>Pick a category...</option>
-                    {this.state.categories &&
-                        this.state.categories.map((category, index) => <option key={index}>{category.name}</option>)}
-                </select>
-                <button
-                    type="submit"
-                    disabled={
-                        this.state.name === '' ||
-                        this.state.quantity === '' ||
-                        this.state.price === '' ||
-                        this.state.description === '' ||
-                        this.state.category === ''
-                    }
-                    onClick={(ev) => this.handleSubmit(ev)}
-                >
-                    Create
-                </button>
-            </StyledForm>
-        )
-    }
+    return (
+        <StyledForm noValidate>
+            <input
+                type="text"
+                name="name"
+                placeholder="Product name"
+                onChange={(ev) => setName(ev.target.value)}
+                value={name}
+            />
+            <input
+                type="number"
+                name="quantity"
+                placeholder="Product quantity"
+                onChange={(ev) => setQuantity(ev.target.value)}
+                value={quantity}
+            />
+            <input
+                type="number"
+                name="price"
+                placeholder="Price"
+                onChange={(ev) => setPrice(ev.target.value)}
+                value={price}
+            />
+            <textarea
+                name="description"
+                width="300"
+                height="100"
+                onChange={(ev) => setDescription(ev.target.value)}
+                placeholder="Product description"
+                value={description}
+            ></textarea>
+            <select onChange={(ev) => handleSelect(ev, setCategory)} value={category}>
+                <option>Pick a category...</option>
+                {categoriesState &&
+                    categoriesState.map((category, index) => <option key={index}>{category.name}</option>)}
+            </select>
+            <button
+                type="submit"
+                disabled={name === '' || quantity === '' || price === '' || description === '' || category === ''}
+                onClick={(ev) => handleSubmit(ev, createProduct, { name, quantity, price, description, category })}
+            >
+                Create
+            </button>
+        </StyledForm>
+    )
 }
 
 CreateProduct.propTypes = {

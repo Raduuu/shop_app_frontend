@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import UsersList from './UsersList'
 import styled from 'styled-components'
 import { get } from '../../utils/utils'
@@ -9,43 +9,40 @@ const Wrapper = styled.div`
     text-align: center;
 `
 
-class Users extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            users: '',
-        }
-    }
+const Users = () => {
+    const [users, setUsers] = useState([])
 
-    componentDidMount() {
+    useEffect(() => {
         get('api/user/', (res) => {
-            this.setState({ users: res.data.data })
+            setUsers(res.data.data)
         })
-    }
+        // eslint-disable-next-line
+    }, []) // because two objects won't be the same and we need to only compare properties in order for this to work
 
-    editUser = (user) => {
-        this.setState((prevState) => {
-            const users = [...prevState.users]
-            const index = users.findIndex((elem) => elem._id === user.data._id)
-            users[index] = user.data
-            return { users }
-        })
-    }
-    updateUsers = (user, type = 'update') => {
+    const updateUsers = (user, type = 'update') => {
         if (type === 'update') {
-            this.setState({ users: [...this.state.users, user.data] })
+            setUsers([...users, user.data])
         } else if (type === 'delete') {
-            this.setState({ users: this.state.users.filter((item) => item._id !== user.data._id) })
+            setUsers(users.filter((item) => item._id !== user.data._id))
         }
     }
 
-    render() {
-        return (
-            <Wrapper>
-                <UsersList users={this.state.users} updateUsers={this.updateUsers} editUser={this.editUser} />
-            </Wrapper>
-        )
+    const editUser = (editedUser) => {
+        const index = users.findIndex((elem) => elem._id === editedUser.data._id)
+        users[index] = editedUser.data
+        const newUsers = users.map((user) => {
+            if (user._id !== editedUser._id) return user
+            return { ...user, email: editedUser.email }
+        })
+        console.log(newUsers)
+        setUsers(newUsers)
     }
+
+    return (
+        <Wrapper>
+            <UsersList users={users} updateUsers={updateUsers} editUser={editUser} setUsers={setUsers} />
+        </Wrapper>
+    )
 }
 
 export default Users

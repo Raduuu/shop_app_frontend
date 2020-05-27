@@ -1,55 +1,45 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import FilterBar from './FilterBar'
 import Product from './Product'
 import { get } from '../../utils/utils'
 import PropTypes from 'prop-types'
 
-export default class ProductsList extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            categories: null,
-        }
-    }
-
-    componentDidMount() {
+const ProductsList = ({
+    products,
+    updateProducts,
+    isAdmin,
+    setCartProducts,
+    handleSelect,
+    handleSearch,
+    handlePriceSelect,
+}) => {
+    const [categories, setCategories] = useState(null)
+    useEffect(() => {
         get('api/category', (res) => {
-            res && this.setState({ categories: res.data.data })
+            res && setCategories(res.data.data)
         })
-    }
+    }, [])
 
-    render() {
-        const {
-            products,
-            updateProducts,
-            isAdmin,
-            setCartProducts,
-            handleSelect,
-            handleSearch,
-            handlePriceSelect,
-        } = this.props
-
-        return (
-            <>
-                <FilterBar
-                    handleSelect={handleSelect}
-                    handlePriceSelect={handlePriceSelect}
-                    handleSearch={handleSearch}
-                    categories={this.state.categories}
-                />
-                {products &&
-                    products.map((product) => (
-                        <Product
-                            updateProducts={updateProducts}
-                            key={product._id}
-                            product={product}
-                            isAdmin={isAdmin}
-                            setCartProducts={setCartProducts}
-                        />
-                    ))}
-            </>
-        )
-    }
+    return (
+        <>
+            <FilterBar
+                handleSelect={handleSelect}
+                handlePriceSelect={handlePriceSelect}
+                handleSearch={handleSearch}
+                categories={categories}
+            />
+            {products &&
+                products.map((product) => (
+                    <Product
+                        updateProducts={updateProducts}
+                        key={product._id}
+                        product={product}
+                        isAdmin={isAdmin}
+                        setCartProducts={setCartProducts}
+                    />
+                ))}
+        </>
+    )
 }
 
 ProductsList.propTypes = {
@@ -73,3 +63,5 @@ ProductsList.defaultProps = {
     handleSearch: () => {},
     handlePriceSelect: () => {},
 }
+
+export default ProductsList
